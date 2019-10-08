@@ -1,0 +1,42 @@
+postgres-data
+data
+
+**.DS_Store
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Python Pipenv
+Pipfile
+Pipfile.lock
+*git .egg-info
+build
+dist
+
+# Jupyter Notebook
+**.ipynb_checkpoints
+
+# mkdocs documentation
+/site
+
+# VS code
+.vscode
+
+# Notes
+.notes
+
+# Environment variables
+**.env
+
+**ca-bundle.crt
+**.idea
+
+settings.json
+test.py
+
+**/*.egg-info

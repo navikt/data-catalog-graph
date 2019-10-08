@@ -1,0 +1,13 @@
+version: "3"
+services:
+  db:
+    image: "postgres"
+    container_name: "datacatalog_postgres"
+    environment:
+      - POSTGRES_USER=dcat
+      - POSTGRES_PASSWORD=dcat
+      - POSTGRES_DB=dcat
+    ports:
+      - "54320:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
