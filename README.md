@@ -1,11 +1,11 @@
-# POC graph orientert databasemodell i postgres for behandlingsoversikt & datakatalog
+# POC graf type databasemodell i postgres for behandlingsoversikt & datakatalog
 
-Start Postgres: docker-compose up
+Start PostgreSQL: docker-compose up
 
 Jupyter notebooks i notebooks mappen innholder skript for: 
 
-- Konfigurasjon av database
-- Poplering av database med testdata fra excel
+- Konfigurasjon av database med tre tabeller
+- Fylle database med testdata fra excel
 - Test av spørringer & grafisk fremstilling
 
 
