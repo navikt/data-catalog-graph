@@ -8,6 +8,10 @@ Jupyter notebooks i notebooks mappen innholder skript for:
 - Fylle database med testdata fra excel
 - Test av spørringer & grafisk fremstilling
 
+Eksempel på resultat av spørring
+
+![category -> concept][../docs/category_concept_example.png]
+
 
 [Arkitektur & datamodell](https://drive.google.com/file/d/1vUTrJ6hxzTYY2P9A_lPSswjMxwi7k8As/view?usp=sharing)
 
