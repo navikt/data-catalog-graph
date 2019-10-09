@@ -10,7 +10,7 @@ Jupyter notebooks i notebooks mappen innholder skript for:
 
 Eksempel på resultat av spørring
 
-![category -> concept][https://github.com/navikt/data-catalog-graph/docs/category_concept_example.png]
+![category -> concept][https://github.com/navikt/data-catalog-graph/blob/master/docs/category_concept_example.png]
 
 
 [Arkitektur & datamodell](https://drive.google.com/file/d/1vUTrJ6hxzTYY2P9A_lPSswjMxwi7k8As/view?usp=sharing)
