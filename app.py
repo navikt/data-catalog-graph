@@ -1,7 +1,6 @@
 from flask import redirect
 import connexion
 
-
 # Create the application instance
 app = connexion.App(__name__, specification_dir="./")
 
