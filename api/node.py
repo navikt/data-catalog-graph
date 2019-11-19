@@ -1,8 +1,7 @@
-# System modules
 from datetime import datetime
-
-# 3rd party modules
 from flask import make_response, abort
+from config import db
+from models import Node, NodeSchema
 
 
 def get_timestamp():
@@ -43,44 +42,54 @@ NODES = {
 }
 
 def read_all():
-    return [NODES[key] for key in sorted(NODES.keys())]
-
+    nodes = Node.query.order_by(Node.id).all()
+    node_schema = NodeSchema(many=True)
+    data = node_schema.dump(nodes).data
+    return data
 
 def read_one(id):
-    if id in NODES:
-        node = NODES.get(id)
+    node = (
+        Node.query.filter(Node.id == id).one_or_none()
+    )
 
+    if node is not None:
+        node_schema = NodeSchema()
+        data = node_schema.dump(node).data
+        return data
     else:
         abort(
             404, "Node with id {id} not found".format(id=id)
         )
 
-    return node
 
 def create(node):
-    id = node.get("id", None)
-    properties = node.get("properties", {})
+    id = node.get("id")
+    existing_node = Node.query.filter(Node.id == id).one_or_none()
+    
+    if existing_node is None:
+        schema = NodeSchema()
+        new_node = schema.load(node, session=db.session).data
 
-    if id not in NODES and id is not None:
-        NODES[id] = {
-            "id": id,
-            "properties": properties
-        }
-        return NODES[id], 201
+        # Add the node to the database
+        db.session.add(new_node)
+        db.session.commit()
+
+        # Serialize and return the newly created node in the response
+        data = schema.dump(new_node).data
+
+        return data, 201
 
     else:
-        abort(
-            406,
-            "Node with id {id} already exists".format(id=id),
-        )
+        abort(409, f"Node {id} exists already")
 
 
 def delete(id):
-    if id in NODES:
-        del NODES[id]
-        return make_response(
-            "{id} successfully deleted".format(id=id), 200
-        )
+    node = Node.query.filter(Node.node_id == id).one_or_none()
+
+    if node is not None:
+        db.session.delete(node)
+        db.session.commit()
+        return make_response(f"Node {id} deleted", 200)
 
     else:
         abort(

@@ -80,6 +80,29 @@ paths:
               properties:
                 properties:
                   type: string
+    post:
+      operationId: node.create
+      tags:
+        - Node
+      summary: Create a node
+      description: Create a node
+      parameters:
+        - name: node
+          in: body
+          description: Node to create
+          required: True
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id of node to create
+              prop:
+                type: string
+                description: Node properties
+      responses:
+        201:
+          description: Successfully created person in list
     delete:
       operationId: node.delete
       tags:
@@ -93,7 +116,32 @@ paths:
           required: True
       responses:
         200:
-          description: Successfully deleted e node
+          description: Successfully deleted the node
+  /node/{id}:
+    get:
+      operationId: node.read_one
+      tags:
+        - Nodes
+      summary: Get node by id
+      description: Get node by id
+      parameters:
+        - name: id
+          in: path
+          description: id ff the node
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successfully read person from people list operation
+          schema:
+            properties:
+              id:
+                type: integer
+              prop:
+                type: string
+              crt_time:
+                type: string
+
   /people:
     get:
       operationId: people.read_all
