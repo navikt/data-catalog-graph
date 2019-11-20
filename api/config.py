@@ -2,6 +2,11 @@ import os
 import connexion
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from dotenv import load_dotenv
+
+from pathlib import Path  # python3 only
+env_path = Path('..') / '.env'
+load_dotenv(dotenv_path=env_path)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -13,7 +18,7 @@ app = connex_app.app
 
 # Configure the SqlAlchemy part of the app instance
 app.config["SQLALCHEMY_ECHO"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://dcat:dcat@localhost:54320/dcat'
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI") 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Create the SqlAlchemy db instance
