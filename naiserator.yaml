@@ -24,8 +24,6 @@ spec:
     initialDelay: 5
     periodSeconds: 5
     failureThreshold: 30
-  vault:
-    enabled: true
   env:
     - name: CERT_PATH
       value: "{{cert_path}}"
