@@ -1,0 +1,48 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: {{application_name}}
+  namespace: default
+  labels:
+    team: {{team}}
+spec:
+  image: "{{image}}"
+  port: 8080
+  replicas:
+    min: 2
+    max: 2
+    cpuThresholdPercentage: 70
+  liveness:
+    path: /isAlive
+    timeout: 1
+    initialDelay: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /isReady
+    timeout: 1
+    initialDelay: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  vault:
+    enabled: true
+  env:
+    - name: CERT_PATH
+      value: "{{cert_path}}"
+    - name: VKS_SECRET_DEST_PATH
+      value: "{{secrets_path}}"
+  ingresses:
+    - {{ingress}}
+  leaderElection: false
+  prometheus:
+    enabled: true
+    path: /metrics
+  istio:
+    enabled: false
+  resources:
+    limits:
+      cpu: 400m
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi

@@ -1,0 +1,7 @@
+.github
+.gitignore
+config-dev-fss.json
+naiserator.yaml
+Dockerfile
+docker-compose.yml
+README.md
