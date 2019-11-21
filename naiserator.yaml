@@ -6,7 +6,7 @@ metadata:
   labels:
     team: {{team}}
 spec:
-  image: "{{image}}"
+  image: {{image}}
   port: 8080
   replicas:
     min: 2
@@ -28,9 +28,9 @@ spec:
     enabled: true
   env:
     - name: CERT_PATH
-      value: "{{cert_path}}"
+      value: {{cert_path}}
     - name: VKS_SECRET_DEST_PATH
-      value: "{{secrets_path}}"
+      value: {{secrets_path}}
   ingresses:
     - {{ingress}}
   leaderElection: false
