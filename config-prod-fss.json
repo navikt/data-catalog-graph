@@ -1,0 +1,8 @@
+{
+  "application_name": "data-catalog-graph",
+  "org_name": "navikt",
+  "ingress": "https://data-catalog-graph.nais.adeo.no",
+  "cert_path": "/etc/pki/tls/cacert.pem",
+  "secrets_path": "/var/run/secrets/nais.io/vault",
+  "team": "dataplattform"
+}

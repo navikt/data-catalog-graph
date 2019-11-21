@@ -101,3 +101,4 @@ def delete(id):
 
     else:
         abort(404, f"Node with id {id} not found")
+        
