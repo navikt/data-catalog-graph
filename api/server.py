@@ -7,7 +7,7 @@ connex_app.add_api("swagger.yml")
 
 @connex_app.route("/")
 def swagger():
-    return redirect('/api/ui')
+    return '/api/ui'
 
 if __name__ == "__main__":
     connex_app.run(debug=True)

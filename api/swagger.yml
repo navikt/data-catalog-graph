@@ -10,6 +10,26 @@ produces:
 
 basePath: /api
 
+definitions:
+    Node:
+      title: Node
+      description: A node
+      required:
+        - prop
+      properties:
+        id:
+          type: integer
+          description: Unique node id
+        prop:
+          type: string
+          description: JSON payload
+          example: "{'id': 'PII.PURPOSE.PENSJON'}" 
+        created:
+          type: string
+          description: When the node was created
+          example: "2019-11-20 14:55:54.160288"
+
+
 # Paths supported by the server application
 paths:
 
@@ -35,11 +55,7 @@ paths:
         200:
           description: Successfully read nodes list operation
           schema:
-            type: array
-            items:
-              properties:
-                properties:
-                  type: string
+            $ref: '#/definitions/Node'
 
   /concepts:
     get:
@@ -63,11 +79,31 @@ paths:
         200:
           description: Successfully read nodes list operation
           schema:
-            type: array
-            items:
-              properties:
-                properties:
-                  type: string
+            $ref: '#/definitions/Node'
+
+  /purposes:
+    get:
+      operationId: purpose.read_all
+      tags:
+        - Purpose
+      summary: Read the entire list of purpose nodes
+      description: Read the entire list of purpose nodes
+      parameters:
+        - name: length
+          in: query
+          type: integer
+          description: Number of purpose nodes to get from nodes
+          required: false
+        - name: offset
+          in: query
+          type: integer
+          description: Offset from beginning of list where to start gathering nodes
+          required: false
+      responses:
+        200:
+          description: Successfully read nodes list operation
+          schema:
+            $ref: '#/definitions/Node'
 
   /nodes:
     get:
@@ -91,11 +127,7 @@ paths:
         200:
           description: Successfully read nodes list operation
           schema:
-            type: array
-            items:
-              properties:
-                properties:
-                  type: string
+            $ref: '#/definitions/Node'
 
     post:
       operationId: node.create
@@ -111,11 +143,8 @@ paths:
           schema:
             type: object
             properties:
-              id:
-                type: integer
-                description: Id of node to create
               prop:
-                type: string
+                type: object
                 description: Node properties
       responses:
         201:
@@ -138,6 +167,25 @@ paths:
 
   /node/{id}:
     get:
+      operationId: node.get_by_prop_id
+      tags:
+        - Nodes
+      summary: Get node by id
+      description: Get node by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the node
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Node found
+          schema:
+            $ref: '#/definitions/Node'
+    
+  /node/prop/{id}:
+    get:
       operationId: node.read_one
       tags:
         - Nodes
@@ -146,20 +194,14 @@ paths:
       parameters:
         - name: id
           in: path
-          description: id ff the node
+          description: id of the node
           type: integer
           required: True
       responses:
         200:
-          description: Successfully read person from people list operation
+          description: Node found
           schema:
-            properties:
-              id:
-                type: integer
-              prop:
-                type: string
-              crt_time:
-                type: string
+            $ref: '#/definitions/Node'
 
     put:
       operationId: node.update
@@ -185,3 +227,6 @@ paths:
       responses:
         200:
           description: Successfully updated node
+
+  
+          

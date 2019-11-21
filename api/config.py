@@ -11,7 +11,10 @@ load_dotenv(dotenv_path=env_path)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Create the connexion application instance
-connex_app = connexion.App(__name__, specification_dir=basedir)
+#from connexion.decorators.uri_parsing import OpenAPIURIParser
+#options = {'uri_parsing_class': OpenAPIURIParser}
+
+connex_app = connexion.App(__name__, specification_dir=basedir) #, options=options)
 
 # Get the underlying Flask app instance
 app = connex_app.app
