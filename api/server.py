@@ -16,7 +16,7 @@ def is_alive():
     return "OK"
 
 
-@connex_app.route("/isAlive")
+@connex_app.route("/isReady")
 def is_ready():
     return "OK"
 
