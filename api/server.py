@@ -7,8 +7,8 @@ connex_app.add_api("swagger.yml")
 
 
 @connex_app.route("/")
-def swagger():
-    return redirect('/api/ui')
+def home():
+    return "data-catalog-graph"
 
 
 @connex_app.route("/isAlive")
