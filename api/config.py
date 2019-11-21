@@ -18,7 +18,7 @@ app = connex_app.app
 
 # Configure the SqlAlchemy part of the app instance
 app.config["SQLALCHEMY_ECHO"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI") 
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URI") 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Create the SqlAlchemy db instance
