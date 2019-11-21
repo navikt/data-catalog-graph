@@ -34,7 +34,7 @@ spec:
   leaderElection: false
   prometheus:
     enabled: true
-    path: /metrics
+    path: /
   istio:
     enabled: false
   resources:
