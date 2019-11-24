@@ -2,41 +2,41 @@ from datetime import datetime
 import json
 from flask import make_response, abort
 from config import db
+import psycopg2.extras
 from models import Node, NodeSchema
+from database import Database
 
 
 def read_all():
-    nodes = Node.query.order_by(Node.id).all()
-    node_schema = NodeSchema(many=True)
-    data = node_schema.dump(nodes).data
-    return data
+    db = Database()
+    nodes = db.execute(f"SELECT * FROM tbl_node")
+    if nodes is not None:
+        return nodes
+
+    abort(404, f"Error fetching nodes")
 
 def read_one(id):
-    node = (
-        Node.query.filter(Node.id == id).one_or_none()
-    )
-
+    db = Database()
+    node = db.execute(f"SELECT * FROM tbl_node where id = '{id}'")
     if node is not None:
-        node_schema = NodeSchema()
-        data = node_schema.dump(node).data
-        return data
-    else:
-        abort(404, f"Node with id {id} not found")
+        return node,201
+
+    abort(404, f"Node with id {id} not found")
 
 
 def get_by_prop_id(id):
-    node = (
-        Node.query.filter(Node.id == id).one_or_none()
-    )
-
+    db = Database()
+    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
+    print(statement)
+    node = db.execute(statement)
     if node is not None:
-        node_schema = NodeSchema()
-        data = node_schema.dump(node).data
-        return data
-    else:
-        abort(404, f"Node with id {id} not found")
+        return node,201
+
+    abort(404, f"Node with prop.id {id} not found")
 
 def create(node):
+
+    print(node)
 
     prop = node.get("prop")
     if prop is None:
@@ -46,49 +46,42 @@ def create(node):
     if id is None:
         abort(409, f"The prop dict should contain id property of type string")
 
-    # update existing
-    with db.engine.connect() as con:
-        statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
-        terms = con.execute(statement)
-        node_schema = NodeSchema(many=True)
-        data = node_schema.dump(terms).data
-        if len(data):
-            for item in data:
-                print(item)
-
-            return data[0], 201
+    # existing node?
+    db = Database()
+    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
+    node = db.fetchone(statement)
+    if node is not None:
+        abort(409, f"Node with prop.id {id} already exists: Node id {node.get('id')}")
 
     #insert new
-    with db.engine.connect() as con:
-        prop =  json.dumps(prop)
-        statement =  f"INSERT INTO tbl_node (prop) VALUES ('{prop}')"
-        con.execute(statement)
-        statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
-        terms = con.execute(statement)
-        node_schema = NodeSchema(many=True)
-        data = node_schema.dump(terms).data
-        if len(data):
-            return data[0], 201
+    db = Database()
+    statement =  f"INSERT INTO tbl_node (prop) VALUES ('{json.dumps(prop)}')"
+    print(statement)
+    db.execute(statement)
 
-    
-def update(id, node):
+    db = Database()
+    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
+    node = db.execute(statement)
+    if node is not None:
+        return node, 201
 
-    update_node = Node.query.filter(Node.prop.id == id).one_or_none()
 
-    if update_node is not None:
-        schema = NodeSchema()
-        update = schema.load(node, session=db.session).data
+def update(node):
+    print("put:", node)
+    node_json = json.loads(json.dumps(node))
+    prop = node_json.get('prop')
+    id = prop.get("id")
+    db = Database()
+    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
+    update_node = db.fetchone(statement)
+    if update_node is None:
+        abort(409, f"Node with prop.id {id} not found")
 
-        update.id = update_node.id
-
-        db.session.merge(update)
-        db.session.commit()
-
-        data = schema.dump(update_node).data
-        return data, 200
-
-    else:
-        abort(404, f"Node not found for Id: {id}")
+    update_id = update_node.get("id")
+    db = Database()
+    prop = json.dumps(node.get('prop'))
+    statement =  f"UPDATE tbl_node SET prop = ('{prop}') WHERE id = {update_id}"
+    db.execute(statement)
 
 
 def delete(id):

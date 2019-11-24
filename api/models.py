@@ -15,6 +15,6 @@ class NodeSchema(ma.ModelSchema):
     def __init__(self, **kwargs):
         super().__init__(strict=True, **kwargs)
 
-    id = fields.Int()
+    id = fields.UUID()
     prop = fields.Str(dump_only=True)
     created = fields.Str()

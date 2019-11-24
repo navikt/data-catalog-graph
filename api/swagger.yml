@@ -149,6 +149,27 @@ paths:
       responses:
         201:
           description: Successfully created new node
+    
+    put:
+      operationId: node.update
+      tags:
+        - Node
+      summary: Update a node
+      description: Update a node
+      parameters:
+        - name: node
+          in: body
+          description: Node to create
+          required: True
+          schema:
+            type: object
+            properties:
+              prop:
+                type: object
+                description: Node properties
+      responses:
+        200:
+          description: Successfully updated node
 
     delete:
       operationId: node.delete
@@ -167,7 +188,7 @@ paths:
 
   /node/{id}:
     get:
-      operationId: node.get_by_prop_id
+      operationId: node.read_one 
       tags:
         - Nodes
       summary: Get node by id
@@ -186,7 +207,7 @@ paths:
     
   /node/prop/{id}:
     get:
-      operationId: node.read_one
+      operationId: node.get_by_prop_id
       tags:
         - Nodes
       summary: Get node by id
@@ -195,7 +216,7 @@ paths:
         - name: id
           in: path
           description: id of the node
-          type: integer
+          type: string
           required: True
       responses:
         200:
@@ -203,30 +224,6 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-    put:
-      operationId: node.update
-      tags:
-        - Node
-      summary: Update a node
-      description: Update a node
-      parameters:
-        - name: id
-          in: path
-          description: Id of node to update
-          type: integer
-          required: True
-        - name: node
-          in: body
-          schema:
-            type: object
-            properties:
-              id:
-                type: integer
-              prop:
-                type: string
-      responses:
-        200:
-          description: Successfully updated node
 
   
           
