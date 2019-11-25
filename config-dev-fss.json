@@ -4,5 +4,6 @@
   "ingress": "https://data-catalog-graph.nais.preprod.local",
   "cert_path": "/etc/pki/tls/cacert.pem",
   "secrets_path": "/var/run/secrets/nais.io/vault",
+  "postgres_vault_path": "postgresql/preprod-fss/creds/data-catalog-metadata-admin",
   "team": "dataplattform"
 }
