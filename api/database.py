@@ -4,13 +4,15 @@ from dotenv import load_dotenv
 from pathlib import Path
 from psycopg2.extras import RealDictCursor
 import logging
+import secrets_reader
 
 class Database:
 
     def __init__(self):
         env_path = Path('..') / '.env'
         load_dotenv(dotenv_path=env_path)
-        dsn = os.getenv("DATABASE_URI") 
+        secrets = secrets_reader.secrets() # os.getenv("DATABASE_URI")
+        dsn = secrets["POSTGRES_DB"]
         self.dsn = dsn
         self.conn = None
 
