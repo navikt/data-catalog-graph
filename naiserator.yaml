@@ -31,6 +31,12 @@ spec:
       value: {{secrets_path}}
     - name: POSTGRES_VAULT_PATH
       value: {{postgres_vault_path}}
+    - name: VKS_VAULT_ADDR
+      value: {{vks_vault_addr}}
+    - name: VKS_AUTH_PATH
+      value: {{vks_auth_path}}
+    - name: VKS_KV_PATH
+      value: {{vks_kv_path}}
   ingresses:
     - {{ingress}}
   leaderElection: false

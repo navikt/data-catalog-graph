@@ -5,5 +5,8 @@
   "cert_path": "/etc/pki/tls/cacert.pem",
   "secrets_path": "/var/run/secrets/nais.io/vault",
   "postgres_vault_path": "postgresql/preprod-fss/creds/data-catalog-metadata-admin",
+  "vks_vault_addr": "https://vault.adeo.no",
+  "vks_auth_path": "auth/kubernetes/preprod/fss/login",
+  "vks_kv_path": "kv/preprod/fss",
   "team": "dataplattform"
 }
