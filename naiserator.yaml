@@ -25,6 +25,8 @@ spec:
     periodSeconds: 5
     failureThreshold: 30
   env:
+    - name: APPLICATION_NAME
+      value: {{application_name}}
     - name: CERT_PATH
       value: {{cert_path}}
     - name: VKS_SECRET_DEST_PATH
