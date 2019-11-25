@@ -37,6 +37,8 @@ spec:
       value: {{vks_auth_path}}
     - name: VKS_KV_PATH
       value: {{vks_kv_path}}
+    - name: K8S_SERVICEACCOUNT_PATH
+      value: {{k8s_serviceaccount_path}}
   ingresses:
     - {{ingress}}
   leaderElection: false

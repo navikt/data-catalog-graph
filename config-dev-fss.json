@@ -8,5 +8,6 @@
   "vks_vault_addr": "https://vault.adeo.no",
   "vks_auth_path": "auth/kubernetes/preprod/fss/login",
   "vks_kv_path": "kv/preprod/fss",
+  "k8s_serviceaccount_path": "/var/run/secrets/kubernetes.io/serviceaccount",
   "team": "dataplattform"
 }
