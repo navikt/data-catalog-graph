@@ -1,7 +1,6 @@
-FROM python:3.8
+FROM python:3.7.5-stretch
 
 COPY . /app
-COPY ca-bundle.crt /etc/ssl/certs/ca-bundle.crt
 WORKDIR /app
 
 RUN pip3 install -r requirements.txt
