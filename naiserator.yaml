@@ -43,6 +43,8 @@ spec:
       value: {{k8s_serviceaccount_path}}
     - name: POSTGRES_ROLE
       value: {{postgres_role}}
+    - name: REQUESTS_CA_BUNDLE
+      value: {{cert_path}}
   ingresses:
     - {{ingress}}
   leaderElection: false
