@@ -24,12 +24,12 @@ class Database:
     def open_connection(self):
         try:
             self.conn = psycopg2.connect(self.dsn)
-        except psycopg2.DatabaseError as e:
-            logging.error(e)
         except psycopg2.OperationalError:
             self._update_credentials()
             self.conn = psycopg2.connect(self.dsn)
             logging.warning(f"Fetching new postgres credentials")
+        except psycopg2.DatabaseError as e:
+            logging.error(e)
         finally:
             logging.info('Connection opened successfully.')
 
