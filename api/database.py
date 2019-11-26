@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from psycopg2.extras import RealDictCursor
 import logging
+
 from dataverk_vault import api as vault_api
 
 
