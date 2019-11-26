@@ -48,6 +48,8 @@ spec:
   ingresses:
     - {{ingress}}
   leaderElection: false
+  vault:
+    enabled: true
   prometheus:
     enabled: true
     path: /

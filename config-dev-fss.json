@@ -2,7 +2,7 @@
   "application_name": "data-catalog-graph",
   "org_name": "navikt",
   "ingress": "https://data-catalog-graph.nais.preprod.local",
-  "cert_path": "/etc/pki/tls/certs/ca-bundle.crt",
+  "cert_path": "/etc/ssl/certs/ca-bundle.crt",
   "secrets_path": "/var/run/secrets/nais.io/vault",
   "postgres_vault_path": "postgresql/preprod-fss/creds/data-catalog-metadata-admin",
   "vks_vault_addr": "https://vault.adeo.no",
