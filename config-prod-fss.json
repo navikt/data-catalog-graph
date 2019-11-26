@@ -9,5 +9,6 @@
   "vks_auth_path": "auth/kubernetes/prod/fss/login",
   "vks_kv_path": "kv/prod/fss",
   "k8s_serviceaccount_path": "/var/run/secrets/kubernetes.io/serviceaccount",
+  "postgres_role": "data-catalog-metadata-admin",
   "team": "dataplattform"
 }

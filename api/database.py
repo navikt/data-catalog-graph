@@ -15,6 +15,7 @@ class Database:
         load_dotenv(dotenv_path=env_path)
         secrets = vault_api.read_secrets()
         dsn = secrets["POSTGRES_DB"]
+        self.postgres_role = os.environ["POSTGRES_ROLE"]
         self.dsn = dsn
         self.vault_secret_path = os.environ["POSTGRES_VAULT_PATH"]
         self.conn = None
@@ -55,6 +56,7 @@ class Database:
                     result = cur.fetchall()
                     return result
                 else:
+                    cur.execute(f"SET ROLE '{self.postgres_role}'")
                     result = cur.execute(query)
                     self.conn.commit()
                     affected = f"{cur.rowcount}"

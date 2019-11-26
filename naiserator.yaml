@@ -41,6 +41,8 @@ spec:
       value: {{vks_kv_path}}
     - name: K8S_SERVICEACCOUNT_PATH
       value: {{k8s_serviceaccount_path}}
+    - name: POSTGRES_ROLE
+      value: {{postgres_role}}
   ingresses:
     - {{ingress}}
   leaderElection: false
