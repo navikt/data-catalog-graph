@@ -84,7 +84,7 @@ def update_one(node):
     statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
     update_node = db.fetchone(statement)
     if update_node is None and id is None:
-        create(node)
+        create_one(node)
 
     elif update_node is None:
         abort(409, f"Node with prop.id {id} not found")
