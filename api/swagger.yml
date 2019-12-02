@@ -141,11 +141,19 @@ paths:
           description: Node to create
           required: True
           schema:
-            type: object
-            properties:
-              prop:
-                type: object
-                description: Node properties
+            oneOf:
+              - type: object
+                properties:
+                  prop:
+                    type: object
+                    description: Node properties
+              - type: array
+                items:
+                  type: object
+                  properties:
+                    prop:
+                      type: object
+                      description: Node properties
       responses:
         201:
           description: Successfully created new node
