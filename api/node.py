@@ -1,3 +1,4 @@
+from collections import Sequence
 from datetime import datetime
 import json
 from flask import make_response, abort
@@ -34,7 +35,7 @@ def get_by_prop_id(id):
 
     abort(404, f"Node with prop.id {id} not found")
 
-def create(node):
+def create_one(node):
 
     print(node)
 
@@ -66,7 +67,15 @@ def create(node):
         return node, 201
 
 
-def update(node):
+def create(node):
+    if isinstance(node, Sequence):
+        for node_item in node:
+            create_one(node_item)
+    else:
+        create_one(node)
+
+
+def update_one(node):
     print("put:", node)
     node_json = json.loads(json.dumps(node))
     prop = node_json.get('prop')
@@ -75,7 +84,7 @@ def update(node):
     statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
     update_node = db.fetchone(statement)
     if update_node is None and id is None:
-        create(node)
+        create_one(node)
 
     elif update_node is None:
         abort(409, f"Node with prop.id {id} not found")
@@ -86,6 +95,14 @@ def update(node):
         prop = json.dumps(node.get('prop'))
         statement =  f"UPDATE tbl_node SET prop = ('{prop}') WHERE id = {update_id}"
         db.execute(statement)
+
+
+def update(node):
+    if isinstance(node, Sequence):
+        for node_item in node:
+            update_one(node_item)
+    else:
+        update_one(node)
 
 
 def delete(id):
