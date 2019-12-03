@@ -38,12 +38,7 @@ components:
           type: object
 
     PropByList:
-      type: array
-      items:
-        type: object
-        properties:
-          prop:
-            type: object
+
 
 # Paths supported by the server application
 paths:
@@ -156,9 +151,12 @@ paths:
           description: Node to create
           required: True
           schema:
-            oneOf:
-              - $ref: '#/components/schemas/PropObject'
-              - $ref: '#/components/schemas/PropByList'
+            type: array
+            items:
+              type: object
+              properties:
+                prop:
+                  type: object
       responses:
         201:
           description: Successfully created new node
