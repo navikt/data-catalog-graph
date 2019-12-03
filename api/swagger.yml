@@ -156,7 +156,7 @@ paths:
           description: Node to create
           required: True
           schema:
-            oneOf:
+            anyOf:
               - $ref: '#/components/schemas/PropObject'
               - $ref: '#/components/schemas/PropByList'
       responses:
