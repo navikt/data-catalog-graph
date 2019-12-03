@@ -29,17 +29,6 @@ definitions:
           description: When the node was created
           example: "2019-11-20 14:55:54.160288"
 
-components:
-  schemas:
-    PropObject:
-      type: object
-      properties:
-        prop:
-          type: object
-
-    PropByList:
-
-
 # Paths supported by the server application
 paths:
 
