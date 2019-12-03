@@ -29,6 +29,21 @@ definitions:
           description: When the node was created
           example: "2019-11-20 14:55:54.160288"
 
+components:
+  schemas:
+    PropObject:
+      type: object
+      properties:
+        prop:
+          type: object
+
+    PropByList:
+      type: array
+        items:
+          type: object
+          properties:
+            prop:
+              type: object
 
 # Paths supported by the server application
 paths:
@@ -142,18 +157,9 @@ paths:
           required: True
           schema:
             oneOf:
-              - type: object
-                properties:
-                  prop:
-                    type: object
-                    description: Node properties
-              - type: array
-                items:
-                  type: object
-                  properties:
-                    prop:
-                      type: object
-                      description: Node properties
+              - $ref: '#/components/schemas/PropObject'
+              - $ref: '#/components/schemas/PropByList'
+
       responses:
         201:
           description: Successfully created new node
