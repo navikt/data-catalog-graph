@@ -39,11 +39,11 @@ components:
 
     PropByList:
       type: array
-        items:
-          type: object
-          properties:
-            prop:
-              type: object
+      items:
+        type: object
+        properties:
+          prop:
+            type: object
 
 # Paths supported by the server application
 paths:
