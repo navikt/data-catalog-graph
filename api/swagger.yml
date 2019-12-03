@@ -159,7 +159,6 @@ paths:
             oneOf:
               - $ref: '#/components/schemas/PropObject'
               - $ref: '#/components/schemas/PropByList'
-
       responses:
         201:
           description: Successfully created new node
