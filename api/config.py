@@ -3,6 +3,8 @@ import connexion
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from dotenv import load_dotenv
+from flask_cors import CORS
+from flask import Flask
 
 from pathlib import Path  # python3 only
 env_path = Path('..') / '.env'
@@ -18,6 +20,8 @@ connex_app = connexion.App(__name__, specification_dir=basedir) #, options=optio
 
 # Get the underlying Flask app instance
 app = connex_app.app
+app_for_cors = Flask(app)
+cors = CORS(app_for_cors)
 
 # Configure the SqlAlchemy part of the app instance
 app.config["SQLALCHEMY_ECHO"] = False
