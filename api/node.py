@@ -16,13 +16,14 @@ def read_all():
 
     abort(404, f"Error fetching nodes")
 
-def read_one(id):
-    db = Database()
-    node = db.execute(f"SELECT * FROM tbl_node where id = '{id}'")
-    if node is not None:
-        return node,201
 
-    abort(404, f"Node with id {id} not found")
+def read_one(guid):
+    db = Database()
+    node = db.execute(f"SELECT * FROM tbl_node where guid = '{guid}'")
+    if node is not None:
+        return node, 201
+
+    abort(404, f"Node with guid {guid} not found")
 
 
 def get_by_prop_id(id):
@@ -31,7 +32,7 @@ def get_by_prop_id(id):
     print(statement)
     node = db.execute(statement)
     if node is not None:
-        return node,201
+        return node, 201
 
     abort(404, f"Node with prop.id {id} not found")
 
@@ -56,7 +57,7 @@ def create_one(node):
 
     #insert new
     db = Database()
-    statement =  f"INSERT INTO tbl_node (prop) VALUES ('{json.dumps(prop)}')"
+    statement = f"INSERT INTO tbl_node (prop) VALUES ('{json.dumps(prop)}')"
     print(statement)
     db.execute(statement)
 
