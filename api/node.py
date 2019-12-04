@@ -21,7 +21,7 @@ def read_one(guid):
     db = Database()
     node = db.execute(f"SELECT * FROM tbl_node where guid = '{guid}'")
     if node is not None:
-        return node, 201
+        return node, 200
 
     abort(404, f"Node with guid {guid} not found")
 
@@ -32,7 +32,7 @@ def get_by_prop_id(id):
     print(statement)
     node = db.execute(statement)
     if node is not None:
-        return node, 201
+        return node, 200
 
     abort(404, f"Node with prop.id {id} not found")
 
