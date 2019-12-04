@@ -84,17 +84,14 @@ def update_one(node):
     db = Database()
     statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
     update_node = db.fetchone(statement)
-    if update_node is None and id is None:
+    if update_node is None:
         create_one(node)
-
-    elif update_node is None:
-        abort(409, f"Node with prop.id {id} not found")
 
     else:
         update_id = update_node.get("id")
         db = Database()
         prop = json.dumps(node.get('prop'))
-        statement =  f"UPDATE tbl_node SET prop = ('{prop}') WHERE id = {update_id}"
+        statement = f"UPDATE tbl_node SET prop = ('{prop}') WHERE id = {update_id}"
         db.execute(statement)
 
 
