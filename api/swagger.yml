@@ -194,13 +194,13 @@ paths:
       operationId: node.read_one 
       tags:
         - Nodes
-      summary: Get node by id
-      description: Get node by id
+      summary: Get node by guid
+      description: Get node by guid
       parameters:
-        - name: id
+        - name: guid
           in: path
-          description: id of the node
-          type: integer
+          description: guid of the node
+          type: string
           required: True
       responses:
         200:
