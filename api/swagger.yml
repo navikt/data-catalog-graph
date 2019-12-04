@@ -189,7 +189,7 @@ paths:
         200:
           description: Successfully deleted the node
 
-  /node/{id}:
+  /node/{guid}:
     get:
       operationId: node.read_one 
       tags:
