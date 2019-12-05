@@ -39,7 +39,7 @@ def get_by_prop_id(id):
 
 def create(node):
     print(node)
-    statement = "INSERT INTO tbl_node (prop) VALUES "
+    statement = "INSERT INTO tbl_node (prop_id, prop) VALUES "
     for node_item in node:
         prop = node_item.get("prop")
         prop_id = node_item.get("prop_id")
@@ -63,7 +63,7 @@ def create(node):
 
 def update(node):
     print("put:", node)
-    statement = "INSERT INTO tbl_node (prop) VALUES "
+    statement = "INSERT INTO tbl_node (prop_id, prop) VALUES "
     for node_item in node:
         prop = node_item.get("prop")
         prop_id = node_item.get("prop_id")
