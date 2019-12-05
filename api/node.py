@@ -47,7 +47,9 @@ def create(node):
             abort(409, f"The node must have a prop key with value of type dict")
         if id is None:
             abort(409, f"The prop dict should contain id property of type string")
-        statement = statement + f"({json.dumps(prop_id)}, E'{json.dumps(prop)}'), "
+
+        json_prop = json.dumps(prop).replace("'", "\'")
+        statement = statement + f"({json.dumps(prop_id)}, E'{json_prop}'), "
 
     # insert new
     db = Database()
@@ -69,7 +71,8 @@ def update(node):
         elif id is None:
             abort(409, f"The prop dict should contain id property of type string")
         else:
-            statement = statement + f"({json.dumps(prop_id)}, E'{json.dumps(prop)}'), "
+            json_prop = json.dumps(prop).replace("'", "\'")
+            statement = statement + f"({json.dumps(prop_id)}, E'{json_prop}'), "
 
     # insert new
     db = Database()
