@@ -36,81 +36,68 @@ def get_by_prop_id(id):
 
     abort(404, f"Node with prop.id {id} not found")
 
-def create_one(node):
-
-    print(node)
-
-    prop = node.get("prop")
-    if prop is None:
-        abort(409, f"The node must have a prop key with value of type dict")
-
-    id = prop.get("id")
-    if id is None:
-        abort(409, f"The prop dict should contain id property of type string")
-
-    # existing node?
-    db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
-    node = db.fetchone(statement)
-    if node is not None:
-        abort(409, f"Node with prop.id {id} already exists: Node id {node.get('id')}")
-
-    #insert new
-    db = Database()
-    statement = f"INSERT INTO tbl_node (prop) VALUES ('{json.dumps(prop)}')"
-    print(statement)
-    db.execute(statement)
-
-    db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
-    node = db.execute(statement)
-    if node is not None:
-        return node, 201
-
 
 def create(node):
-    if isinstance(node, Sequence):
-        for node_item in node:
-            create_one(node_item)
-    else:
-        create_one(node)
+    print(node)
+    statement = "INSERT INTO tbl_node (prop_id, prop) VALUES "
+    for node_item in node:
+        prop = node_item.get("prop")
+        prop_id = node_item.get("prop_id")
+        id = prop.get("id")
+        if prop is None:
+            abort(409, f"The node must have a prop key with value of type dict")
+        if id is None:
+            abort(409, f"The prop dict should contain id property of type string")
+        if prop_id is None:
+            abort(409, f"The node must have a prop_id key with value of type string")
+        statement = statement + f"({json.dumps(prop_id)}, {json.dumps(prop)}), "
 
-
-def update_one(node):
-    print("put:", node)
-    node_json = json.loads(json.dumps(node))
-    prop = node_json.get('prop')
-    id = prop.get("id")
+    # insert new
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
-    update_node = db.fetchone(statement)
-    if update_node is None:
-        create_one(node)
-
-    else:
-        update_id = update_node.get("id")
-        db = Database()
-        prop = json.dumps(node.get('prop'))
-        statement = f"UPDATE tbl_node SET prop = ('{prop}') WHERE id = {update_id}"
-        db.execute(statement)
+    # Deleting the space and ',' at the end of the statement
+    statement = statement[:-2]
+    print(statement)
+    node = db.execute(statement)
+    return node
 
 
 def update(node):
-    if isinstance(node, Sequence):
-        for node_item in node:
-            update_one(node_item)
+    print("put:", node)
+    statement = "INSERT INTO tbl_node (prop_id, prop) VALUES "
+    for node_item in node:
+        prop = node_item.get("prop")
+        prop_id = node_item.get("prop_id")
+        id = prop.get("id")
+        if prop is None:
+            abort(409, f"The node must have a prop key with value of type dict")
+        elif id is None:
+            abort(409, f"The prop dict should contain id property of type string")
+        elif prop_id is None:
+            abort(409, f"The node must have a prop_id key with value of type string")
+        else:
+            statement = statement + f"({json.dumps(prop_id)}, {json.dumps(prop)}), "
+
+    # insert new
+    db = Database()
+    # Deleting the space and ',' at the end of the statement
+    statement = statement[:-2]
+    # On receiving a prop_id that already exist it will instead update the prop
+    statement = statement + " ON CONFLICT (prop_id) DO UPDATE SET prop = excluded.prop"
+    print(statement)
+    node = db.execute(statement)
+    return node
+
+
+def delete(prop_id):
+    print("delete:", prop_id)
+
+    # Checking if node with prop_id exist
+    db = Database()
+    check_statement = f"SELECT * FROM tbl_node WHERE prop_id = '{prop_id}'"
+    node = db.execute(check_statement)
+    if node is None:
+        abort(404, f"Could not find node with prop_id = {prop_id}")
     else:
-        update_one(node)
-
-
-def delete(id):
-    node = Node.query.filter(Node.node_id == id).one_or_none()
-
-    if node is not None:
-        db.session.delete(node)
-        db.session.commit()
-        return make_response(f"Node {id} deleted", 200)
-
-    else:
-        abort(404, f"Node with id {id} not found")
-        
+        statement = f"DELETE FROM tbl_node WHERE 'prop_id'={prop_id}  "
+        db.execute(statement)
+        return f"Node with prop_id = {prop_id} deleted", 200
