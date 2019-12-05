@@ -57,7 +57,7 @@ def create(node):
     statement = statement[:-2]
     print(statement)
     node = db.execute(statement)
-    return node
+    return node, 200
 
 
 def update(node):
@@ -82,7 +82,7 @@ def update(node):
     statement = statement + " ON CONFLICT (prop_id) DO UPDATE SET prop = excluded.prop"
     print(statement)
     node = db.execute(statement)
-    return node
+    return node, 200
 
 
 def delete(prop_id):
