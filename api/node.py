@@ -49,7 +49,7 @@ def create(node):
             abort(409, f"The prop dict should contain id property of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
-            values = values + f"({json.dumps(prop_id)}, '{json_prop}'), "
+            statement = statement + f"({json.dumps(prop_id)}, '{json_prop}'), "
 
     # insert new
     db = Database()
