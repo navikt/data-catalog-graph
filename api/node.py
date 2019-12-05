@@ -93,9 +93,9 @@ def delete(prop_id):
 
     # Checking if node with prop_id exist
     db = Database()
-    check_statement = f"SELECT * FROM tbl_node WHERE 'prop_id' = '{prop_id}'"
+    check_statement = f"SELECT * FROM tbl_node WHERE prop_id = '{prop_id}'"
     node = db.execute(check_statement)
-    if node is Node:
+    if node is None:
         abort(404, f"Could not find node with prop_id = {prop_id}")
     else:
         statement = f"DELETE FROM tbl_node WHERE 'prop_id'={prop_id}  "
