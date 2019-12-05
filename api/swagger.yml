@@ -21,9 +21,6 @@ definitions:
         id:
           type: integer
           description: Unique node id
-        prop_id:
-          type: string
-          description: unique id of JSON payload, this should be the same id as id inside prop
         prop:
           type: string
           description: JSON payload
@@ -148,9 +145,6 @@ paths:
             items:
               type: object
               properties:
-                prop_id:
-                  type: string
-                  description: Unique prop id, this should be the same id as id inside prop
                 prop:
                   type: object
                   description: Node properties
@@ -174,9 +168,6 @@ paths:
             items:
               type: object
               properties:
-                prop_id:
-                  type: string
-                  description: Unique prop id, this should be the same id as id inside prop
                 prop:
                   type: object
                   description: Node properties
