@@ -4,6 +4,7 @@ import psycopg2
 from dotenv import load_dotenv
 from pathlib import Path
 from psycopg2.extras import RealDictCursor
+from flask import abort
 import logging
 
 from dataverk_vault import api as vault_api
@@ -65,6 +66,7 @@ class Database:
                     return affected
         except psycopg2.DatabaseError as e:
             logging.error(e)
+            abort(400, f"Error: {e.error}, Hint: {e.hint}")
         finally:
             if self.conn:
                 self.conn.close()
