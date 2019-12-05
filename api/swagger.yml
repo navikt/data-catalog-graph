@@ -16,7 +16,7 @@ definitions:
       description: A node
       required:
         - prop
-        - pro_id
+        - prop_id
       properties:
         id:
           type: integer
