@@ -42,14 +42,11 @@ def create(node):
     statement = "INSERT INTO tbl_node (prop_id, prop) VALUES "
     for node_item in node:
         prop = node_item.get("prop")
-        prop_id = node_item.get("prop_id")
-        id = prop.get("id")
+        prop_id = prop.get("id")
         if prop is None:
             abort(409, f"The node must have a prop key with value of type dict")
         if id is None:
             abort(409, f"The prop dict should contain id property of type string")
-        if prop_id is None:
-            abort(409, f"The node must have a prop_id key with value of type string")
         statement = statement + f"({json.dumps(prop_id)}, {json.dumps(prop)}), "
 
     # insert new
@@ -66,14 +63,11 @@ def update(node):
     statement = "INSERT INTO tbl_node (prop_id, prop) VALUES "
     for node_item in node:
         prop = node_item.get("prop")
-        prop_id = node_item.get("prop_id")
-        id = prop.get("id")
+        prop_id = prop.get("id")
         if prop is None:
             abort(409, f"The node must have a prop key with value of type dict")
         elif id is None:
             abort(409, f"The prop dict should contain id property of type string")
-        elif prop_id is None:
-            abort(409, f"The node must have a prop_id key with value of type string")
         else:
             statement = statement + f"({json.dumps(prop_id)}, {json.dumps(prop)}), "
 
