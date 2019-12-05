@@ -66,7 +66,7 @@ class Database:
                     return affected
         except psycopg2.DatabaseError as e:
             logging.error(e)
-            abort(400, f"Error: {e.error}, Hint: {e.hint}")
+            abort(400, f"Error Message: {e}")
         finally:
             if self.conn:
                 self.conn.close()
