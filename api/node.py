@@ -95,6 +95,6 @@ def delete(prop_id):
     if node is None:
         abort(404, f"Could not find node with prop_id = {prop_id}")
     else:
-        statement = f"DELETE FROM tbl_node WHERE 'prop_id'={prop_id}  "
+        statement = f"DELETE FROM tbl_node WHERE prop_id = '{prop_id}'"
         db.execute(statement)
         return f"Node with prop_id = {prop_id} deleted", 200
