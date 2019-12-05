@@ -174,7 +174,7 @@ paths:
       responses:
         200:
           description: Successfully updated node
-
+  /node/{prop_id}:
     delete:
       operationId: node.delete
       tags:
