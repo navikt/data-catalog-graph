@@ -39,13 +39,13 @@ def get_by_prop_id(id):
 
 def create(node):
     print(node)
-    values = " "
+    statement = "INSERT INTO tbl_node (prop_id, prop) VALUES "
     for node_item in node:
         prop = node_item.get("prop")
-        prop_id = prop.get("id")
         if prop is None:
             abort(409, f"The node must have a prop key with value of type dict")
-        elif prop_id is None:
+        prop_id = prop.get("id")
+        if prop_id is None:
             abort(409, f"The prop dict should contain id property of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
@@ -53,7 +53,6 @@ def create(node):
 
     # insert new
     db = Database()
-    statement = "INSERT INTO tbl_node (prop_id, prop) VALUES" + values
     # Deleting the space and ',' at the end of the statement
     statement = statement[:-2]
     print(statement)
@@ -66,10 +65,10 @@ def update(node):
     statement = "INSERT INTO tbl_node (prop_id, prop) VALUES "
     for node_item in node:
         prop = node_item.get("prop")
-        prop_id = prop.get("id")
         if prop is None:
             abort(409, f"The node must have a prop key with value of type dict")
-        elif prop_id is None:
+        prop_id = prop.get("id")
+        if prop_id is None:
             abort(409, f"The prop dict should contain id property of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
