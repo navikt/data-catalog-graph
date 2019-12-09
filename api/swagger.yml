@@ -21,8 +21,11 @@ definitions:
         id:
           type: integer
           description: Unique node id
-        prop:
+        prop_id:
           type: string
+          example: "test_prop_id.2131234"
+        prop:
+          type: dict
           description: JSON payload
           example: "{'id': 'PII.PURPOSE.PENSJON'}" 
         created:
@@ -229,5 +232,33 @@ paths:
             $ref: '#/definitions/Node'
 
 
-  
+  /edges:
+    put:
+      operationId: edge.update
+      tags:
+        - Edge
+      summary: Update edges by node prop_id n1 and n2
+      description: Updates an edge based on node prop_id n1 and n2, if the edge is not found a new edge is created.
+      parameters:
+        - name: node
+            in: body
+            description: Edge to create
+            required: True
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  n1:
+                    type: string
+                    description: Node prop_id
+                  n2:
+                    type: string
+                    description: Node prop_id
+            responses:
+              200:
+                description: Successfully updated node
+
+
+
           
