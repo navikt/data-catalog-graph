@@ -21,8 +21,11 @@ definitions:
         id:
           type: integer
           description: Unique node id
-        prop:
+        prop_id:
           type: string
+          example: "test_prop_id.2131234"
+        prop:
+          type: dict
           description: JSON payload
           example: "{'id': 'PII.PURPOSE.PENSJON'}" 
         created:
@@ -248,10 +251,10 @@ paths:
                 properties:
                   n1:
                     type: string
-                    description: Node prop_id n1
+                    description: Node prop_id
                   n2:
                     type: string
-                    description: Node prop_id n2
+                    description: Node prop_id
             responses:
               200:
                 description: Successfully updated node
