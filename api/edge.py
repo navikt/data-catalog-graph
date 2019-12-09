@@ -19,6 +19,31 @@ EDGES = {
     'create': 'date_value'
 }
 
+EDGES_OLD = {
+    "1": {
+        "id": "1",
+        "start": "2",
+        "end": "3",
+        "properties": {"type": "defined by term", "versions": [{
+            "version": 1,
+            "validfrom": "2019-1-1",
+            "validto": "2099-12-31",
+            "current": True
+        }]
+    }},
+    "2": {
+        "id": "2",
+        "start": "3",
+        "end": "2",
+         "properties": {"type": "term defines", "versions": [{
+            "version": 1,
+            "validfrom": "2019-1-1",
+            "validto": "2099-12-31",
+            "current": True
+        }]
+    }}
+}
+
 
 def read_all():
     return [EDGES[key] for key in sorted(EDGES.keys())]
