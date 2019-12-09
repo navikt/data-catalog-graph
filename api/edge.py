@@ -37,7 +37,8 @@ EDGES = {
     }}
 }
 
-def create(edge):
+
+def update(edge):
     print("put:", edge)
     statement = "INSERT INTO tbl_edge (n1, n2) VALUES "
     for edge_item in edge:

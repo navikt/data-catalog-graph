@@ -229,5 +229,33 @@ paths:
             $ref: '#/definitions/Node'
 
 
-  
+  /edge:
+    put:
+      operationId: edge.update
+      tags:
+        - Edge
+      summary: Update edges by node prop_id n1 and n2
+      description: Updates an edge based on node prop_id n1 and n2, if the edge is not found a new edge is created.
+      parameters:
+        - name: node
+            in: body
+            description: Edge to create
+            required: True
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  n1:
+                    type: string
+                    description: Node prop_id n1
+                  n2:
+                    type: string
+                    description: Node prop_id n2
+            responses:
+              200:
+                description: Successfully updated node
+
+
+
           
