@@ -232,7 +232,7 @@ paths:
             $ref: '#/definitions/Node'
 
 
-  /edge:
+  /edges:
     put:
       operationId: edge.update
       tags:
