@@ -34,6 +34,30 @@ definitions:
           description: When the node was created
           example: "2019-11-20 14:55:54.160288"
 
+    Edge:
+      title: Edge
+      description: Edge for nodes
+      required:
+        - n1
+        - n2
+      properties:
+        n1:
+          type: string
+          description: prop_id of node
+          example: "test_prop_id.2131234"
+        n2:
+          type: string
+          description: prop_id of node
+          example: "test_prop_id.2131234"
+        guid:
+          type: string
+          description: Edge id of prop
+          example: "hashed_id_value"
+        created:
+          type: string
+          description: When the edge was created
+          example: "2019-11-20 14:55:54.160288"
+
 # Paths supported by the server application
 paths:
 
@@ -136,7 +160,7 @@ paths:
     post:
       operationId: node.create
       tags:
-        - Node
+        - Nodes
       summary: Create a node
       description: Create a node
       parameters:
@@ -159,7 +183,7 @@ paths:
     put:
       operationId: node.update
       tags:
-        - Node
+        - Nodes
       summary: Update a node
       description: Update a node
       parameters:
@@ -233,10 +257,33 @@ paths:
             $ref: '#/definitions/Node'
 
   /edges:
+    get:
+      operationId: edge.read_all
+      tags:
+        - Edges
+      summary: Get all edges
+      description: Get all edges
+      parameters:
+        - name: length
+          in: query
+          type: integer
+          description: Number of edges to get from edges
+          required: false
+        - name: offset
+          in: query
+          type: integer
+          description: Offset from beginning of list where to start gathering edges
+          required: false
+      responses:
+        200:
+          description: Successfully read edges list operation
+          schema:
+            $ref: '#/definitions/Edge'
+
     put:
       operationId: edge.update
       tags:
-        - Edge
+        - Edges
       summary: Update a edge
       description: Update a edge and create new edge if not exist
       parameters:
