@@ -305,3 +305,22 @@ paths:
       responses:
         200:
           description: Successfully updated edges
+
+    /edge/{id}:
+        get:
+          operationId: edge.read_one
+          tags:
+            - Edges
+          summary: Get edge by id
+          description: Get edge by id
+          parameters:
+            - name: id
+              in: path
+              description: id of the edge
+              type: string
+              required: True
+          responses:
+            200:
+              description: Edge found
+              schema:
+                $ref: '#/definitions/Edge'
