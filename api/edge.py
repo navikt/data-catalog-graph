@@ -50,10 +50,10 @@ def read_all():
 
     statement = "SELECT * FROM tbl_edge"
     print(statement)
-    edge = db.execute(statement)
+    edges = db.execute(statement)
 
-    if edge is not None:
-        return edge, 200
+    if edges is not None:
+        return edges, 200
 
     abort(404, "Error fetching edges")
 
