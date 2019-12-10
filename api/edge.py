@@ -46,7 +46,16 @@ EDGES_OLD = {
 
 
 def read_all():
-    return [EDGES[key] for key in sorted(EDGES.keys())]
+    db = Database()
+
+    statement = "SELECT * FROM tbl_edge"
+    print(statement)
+    edges = db.execute(statement)
+
+    if edges is not None:
+        return edges, 200
+
+    abort(404, "Error fetching edges")
 
 
 def update(edge):
