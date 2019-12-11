@@ -85,7 +85,7 @@ def read_all_edges_of_node(prop_id):
     print("get:",prop_id)
     db = Database()
     
-    statement = f"SELECT * FROM tbl_edge WHERE 'n1={prop_id}'"
+    statement = f"SELECT * FROM tbl_edge WHERE n1='{prop_id}'"
     edges = db.execute(statement)
 
     if edges is not None:
