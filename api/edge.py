@@ -45,7 +45,7 @@ EDGES_OLD = {
 }
 
 
-def read_all():
+def get_all():
     db = Database()
 
     statement = "SELECT * FROM tbl_edge"
@@ -58,34 +58,61 @@ def read_all():
     abort(404, "Error fetching edges")
 
 
-def update(edge):
-    print("put:", edge)
-    statement = "INSERT INTO tbl_edge (n1, n2) VALUES "
-    for edge_item in edge:
-        n1 = edge_item.get("n1")
-        n2 = edge_item.get("n2")
-        if n1 is None:
-            abort(409, f"The edge must have a n1 key with value of type string")
-        if n2 is None:
-            abort(409, f"The edge must have a n2 key with value of type string")
-        else:
-            statement = statement + f"('{n1}', '{n2}'), "
+def update(edges):
+    statement = "INSERT INTO tbl_edge (n1, n2, prop) VALUES "
 
-    # insert new
+    for edge in edges:
+        n1 = edge.get("n1")
+        n2 = edge.get("n2")
+        prop = json.dumps(edge.get("prop"))
+        if n1 is None:
+            abort(409, f"The edge must have a source node n1 of type string")
+        if n2 is None:
+            abort(409, f"The edge must have a target node n2 of type string")
+        if prop is None:
+            abort(409, f"The edge must have a prop of type string")
+        else:
+            statement = statement + f"({n1}, {n2}, '{prop}'), "
+
     db = Database()
     # Deleting the space and ',' at the end of the statement
     statement = statement[:-2]
-    # On receiving a prop_id that already exist it will instead update the prop
-    statement = statement + " ON CONFLICT (n1, n2) DO UPDATE SET n1 = excluded.n1, n2 = excluded.n2"
+    # TODO: add not overwrite prop
+    # On receiving a pair of nodes that already exist it will add the prop to the prop array
+    statement = statement + " ON CONFLICT (n1, n2) DO UPDATE SET n1 = excluded.n1, n2 = excluded.n2, prop=excluded.prop"
     print(statement)
     edge = db.execute(statement)
-    return f"Successfully updated {edge} rows", 200
+    return f"Successfully updated {len(edge)} rows", 200
 
-def read_all_edges_of_node(prop_id):
-    print("get:",prop_id)
+def get_all_edges_of_node(node_id):
+    print("get:",node_id)
     db = Database()
     
-    statement = f"SELECT * FROM tbl_edge WHERE n1='{prop_id}'"
+    statement = f"SELECT * FROM tbl_edge WHERE n1='{node_id}' OR n2='{node_id}'"
+    edges = db.execute(statement)
+
+    if edges is not None:
+        return edges, 200
+
+    abort(404, "Error fetching edges")
+
+def get_all_edges_of_source_node(node_id):
+    print("get:",node_id)
+    db = Database()
+    
+    statement = f"SELECT * FROM tbl_edge WHERE n1='{node_id}'"
+    edges = db.execute(statement)
+
+    if edges is not None:
+        return edges, 200
+
+    abort(404, "Error fetching edges")
+
+def get_all_edges_of_target_node(node_id):
+    print("get:",node_id)
+    db = Database()
+    
+    statement = f"SELECT * FROM tbl_edge WHERE n2='{node_id}'"
     edges = db.execute(statement)
 
     if edges is not None:

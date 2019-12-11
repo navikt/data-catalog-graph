@@ -14,13 +14,19 @@ class Database:
 
     def __init__(self):
         env_path = Path('..') / '.env'
-        load_dotenv(dotenv_path=env_path)
-        secrets = vault_api.read_secrets()
-        dsn = secrets["POSTGRES_DB"]
-        self.postgres_role = os.environ["POSTGRES_ROLE"]
+        load_dotenv(dotenv_path=env_path, verbose=True)
+        try:
+            dsn = os.environ["POSTGRES_DB"]
+            postgres_role = os.environ["POSTGRES_ROLE"]
+        except:
+            secrets = vault_api.read_secrets()
+            dsn = secrets["POSTGRES_DB"]
+            postgres_role = os.environ["POSTGRES_ROLE"]
+            self.vault_secret_path = os.environ["POSTGRES_VAULT_PATH"]
         self.dsn = dsn
-        self.vault_secret_path = os.environ["POSTGRES_VAULT_PATH"]
+        self.postgres_role = postgres_role
         self.conn = None
+        
 
     def open_connection(self):
         try:

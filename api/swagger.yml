@@ -16,15 +16,10 @@ definitions:
       description: A node
       required:
         - prop
-        - prop_id
       properties:
         id:
           type: integer
           description: Unique node id
-        prop_id:
-          type: string
-          description: Id of prop
-          example: "test_prop_id.2131234"
         prop:
           type: string
           description: JSON payload
@@ -40,19 +35,20 @@ definitions:
       required:
         - n1
         - n2
+        - prop
       properties:
         n1:
-          type: string
-          description: prop_id of node
-          example: "test_prop_id.2131234"
+          type: integer
+          description: id of  source node
+          example: 259
         n2:
+          type: integer
+          description: id of target node
+          example: 260
+        prop:
           type: string
-          description: prop_id of node
-          example: "test_prop_id.2131234"
-        guid:
-          type: string
-          description: Edge id of prop
-          example: "hashed_id_value"
+          description: props array (json)
+          example: "['belongs to']" 
         created:
           type: string
           description: When the edge was created
@@ -218,9 +214,28 @@ paths:
         200:
           description: Successfully deleted the node
 
-  /node/{guid}:
+  /node/{id}:
     get:
-      operationId: node.read_one 
+      operationId: node.get_by_id 
+      tags:
+        - Nodes
+      summary: Get node by id
+      description: Get node by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the node
+          type: string
+          required: True
+      responses:
+        200:
+          description: Node found
+          schema:
+            $ref: '#/definitions/Node'
+
+  /node/guid{guid}:
+    get:
+      operationId: node.get_by_guid 
       tags:
         - Nodes
       summary: Get node by guid
@@ -277,7 +292,7 @@ paths:
 
   /edges:
     get:
-      operationId: edge.read_all
+      operationId: edge.get_all
       tags:
         - Edges
       summary: Get all edges
@@ -304,11 +319,11 @@ paths:
       tags:
         - Edges
       summary: Update a edge
-      description: Update a edge and create new edge if not exist
+      description: Update a edge or create new edge if the edge does not exist
       parameters:
-        - name: edge
+        - name: edges
           in: body
-          description: Edge to update or create if not exist
+          description: Edge to update or create
           required: True
           schema:
             type: array
@@ -316,30 +331,71 @@ paths:
               type: object
               properties:
                 n1:
-                  type: string
-                  description: Node prop_id property
+                  type: integer
+                  description: id of source node
                 n2:
-                  type: string
-                  description: Node prop_id property
+                  type: integer
+                  description: id of target node
+                prop:
+                    type: array
+                    description: array of edge properties
       responses:
         200:
           description: Successfully updated edges
 
-  /edges/{prop_id}:
+  /edges/{node_id}:
     get:
-      operationId: edge.read_all_edges_of_node
+      operationId: edge.get_all_edges_of_node
       tags:
         - Edges
-      summary: Get all edges related to node with prop_id
-      description: Get all edges related to node with prop_id
+      summary: Get all edges connected to node with id
+      description: Get all edges connected to node with id
       parameters:
-        - name: prop_id
+        - name: node_id
           in: path
-          description: prop_id value for n1
+          description: node_id
           type: string
           required: True
       responses:
         200:
-          description: All edges found belonging to node
+          description: All edges found connected to node
+          schema:
+            $ref: '#/definitions/Edge'
+
+  /edges/source/{node_id}:
+    get:
+      operationId: edge.get_all_edges_of_source_node
+      tags:
+        - Edges
+      summary: Get all edges connected to source node with id
+      description: Get all edges connected to source node with id
+      parameters:
+        - name: node_id
+          in: path
+          description: node_id
+          type: string
+          required: True
+      responses:
+        200:
+          description: All edges found connected to source node
+          schema:
+            $ref: '#/definitions/Edge'
+
+  /edges/target/{node_id}:
+    get:
+      operationId: edge.get_all_edges_of_target_node
+      tags:
+        - Edges
+      summary: Get all edges connected to target node with id
+      description: Get all edges connected to target node with id
+      parameters:
+        - name: node_id
+          in: path
+          description: node_id
+          type: string
+          required: True
+      responses:
+        200:
+          description: All edges found connected to target node
           schema:
             $ref: '#/definitions/Edge'

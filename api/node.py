@@ -17,7 +17,7 @@ def read_all():
     abort(404, f"Error fetching nodes")
 
 
-def read_one(guid):
+def get_by_guid(guid):
     db = Database()
     node = db.execute(f"SELECT * FROM tbl_node where guid = '{guid}'")
     if node is not None:
@@ -25,11 +25,18 @@ def read_one(guid):
 
     abort(404, f"Node with guid {guid} not found")
 
+def get_by_id(id):
+    db = Database()
+    statement = f"SELECT * FROM tbl_node WHERE id = '{id}'"
+    node = db.execute(statement)
+    if node is not None:
+        return node, 200
+
+    abort(404, f"Node with id {id} not found")
 
 def get_by_prop_id(id):
     db = Database()
     statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
-    print(statement)
     node = db.execute(statement)
     if node is not None:
         return node, 200
