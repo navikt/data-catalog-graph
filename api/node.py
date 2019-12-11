@@ -37,6 +37,17 @@ def get_by_prop_id(id):
     abort(404, f"Node with prop.id {id} not found")
 
 
+def get_all_nodes_by_pattern(id_pattern):
+    db = Database()
+    statement = f"SELECT * FROM tbl_node WHERE prop_id LIKE '{id_pattern}%' "
+    print(statement)
+    node = db.execute(statement)
+    if node is not None:
+        return node, 200
+    
+    abort(404, f"No node found with prop_id matching {id_pattern}")
+
+
 def create(node):
     print(node)
     statement = "INSERT INTO tbl_node (prop_id, prop) VALUES "
