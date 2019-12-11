@@ -81,17 +81,18 @@ def update(edge):
     edge = db.execute(statement)
     return f"Successfully updated {edge} rows", 200
 
+def read_all_edges_of_node(prop_id):
+    print("get:",prop_id)
+    db = Database()
+    
+    statement = f"SELECT * FROM tbl_edge WHERE n1={prop_id}"
+    edges = db.execute(statement)
 
-def read_one(id):
-    if id in EDGES:
-        node = EDGES.get(id)
+    if edges is not None:
+        return edges, 200
 
-    else:
-        abort(
-            404, "Edge with id {id} not found".format(id=id)
-        )
+    abort(404, "Error fetching edges")
 
-    return node
 
 def delete(id):
     if id in EDGES:
