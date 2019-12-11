@@ -285,8 +285,8 @@ paths:
       operationId: edge.read_all_edges_of_node
       tags:
         - Edges
-      summary: Get all edges realated to node with prop_id
-      description: Get all edges realated to node with prop_id
+      summary: Get all edges related to node with prop_id
+      description: Get all edges related to node with prop_id
       parameters:
         - name: prop_id
           in: path
