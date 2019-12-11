@@ -256,6 +256,25 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
+  /node/search/{id}:
+    get:
+      operationId: node.get_all_nodes_by_pattern
+      tags:
+        - Nodes
+      summary: Get node by id
+      description: Get node by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the node
+          type: string
+          required: True
+      responses:
+        200:
+          description: Node found
+          schema:
+            $ref: '#/definitions/Node'
+
   /edges:
     get:
       operationId: edge.read_all
