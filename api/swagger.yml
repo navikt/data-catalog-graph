@@ -256,7 +256,7 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /node/search/{id}:
+  /node/search/{id_pattern}:
     get:
       operationId: node.get_all_nodes_by_pattern
       tags:
@@ -264,9 +264,9 @@ paths:
       summary: Get node by id
       description: Get node by id
       parameters:
-        - name: id
+        - name: id_pattern
           in: path
-          description: id of the node
+          description: pattern for id of the node
           type: string
           required: True
       responses:
