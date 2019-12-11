@@ -280,6 +280,25 @@ paths:
           schema:
             $ref: '#/definitions/Edge'
 
+  /edges/{prop_id}:
+    get:
+      operationId: edge.read_all_edges_of_node
+      tags:
+        - Edges
+      summary: Get all edges realated to node with prop_id
+      description: Get all edges realated to node with prop_id
+      parameters:
+        - name: prop_id
+          in: path
+          description: prop_id value for n1
+          type: string
+          required: True
+      responses:
+        200:
+          description: All edges found belonging to node
+          schema:
+            $ref: '#/definitions/Edge'
+
     put:
       operationId: edge.update
       tags:
@@ -306,21 +325,3 @@ paths:
         200:
           description: Successfully updated edges
 
-    /edge/{id}:
-        get:
-          operationId: edge.read_one
-          tags:
-            - Edges
-          summary: Get edge by id
-          description: Get edge by id
-          parameters:
-            - name: id
-              in: path
-              description: id of the edge
-              type: string
-              required: True
-          responses:
-            200:
-              description: Edge found
-              schema:
-                $ref: '#/definitions/Edge'
