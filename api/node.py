@@ -95,6 +95,10 @@ def delete(prop_id):
     if node is None:
         abort(404, f"Could not find node with prop_id = {prop_id}")
     else:
+        # Deleting all edges before deleting node
+        delete_edges = f"DELETE FROM tbl_edge where n1 = '{prop_id} or n2 = '{prop_id}"
+        db.execute(delete_edges)
+        # Deleting node after all references to it is deleted
         statement = f"DELETE FROM tbl_node WHERE prop_id = '{prop_id}'"
         db.execute(statement)
         return f"Node with prop_id = {prop_id} deleted", 200
