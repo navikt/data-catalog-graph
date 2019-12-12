@@ -69,7 +69,8 @@ def update(edge):
         if n2 is None:
             abort(409, f"The edge must have a n2 key with value of type string")
         else:
-            statement = statement + f"('{n1}', '{n2}'), "
+            statement = statement + f"((SELECT id FROM tbl_node WHERE prop_id = '{n1}'), " \
+                                    f"(SELECT id FROM tbl_node WHERE prop_id = '{n2}')), "
 
     # insert new
     db = Database()
