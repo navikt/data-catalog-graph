@@ -63,7 +63,7 @@ paths:
 
   /terms:
     get:
-      operationId: term.read_all
+      operationId: term.get_all
       tags:
         - Terms
       summary: Read the entire list of term nodes
@@ -79,6 +79,25 @@ paths:
           type: integer
           description: Offset from beginning of list where to start gathering nodes
           required: false
+      responses:
+        200:
+          description: Successfully read nodes list operation
+          schema:
+            $ref: '#/definitions/Node'
+
+  /terms/search/{term_name}:
+    get:
+      operationId: term.search_term_by_name
+      tags:
+        - Terms
+      summary: Search for a term by name
+      description: Searches the table for a term based on the name
+      parameters:
+        - name: term_name
+          in: path
+          type: string
+          description: Term name
+          required: true
       responses:
         200:
           description: Successfully read nodes list operation
