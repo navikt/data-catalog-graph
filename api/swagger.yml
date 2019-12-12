@@ -59,7 +59,7 @@ paths:
 
   /terms:
     get:
-      operationId: term.read_all
+      operationId: term.get_all
       tags:
         - Terms
       summary: Read the entire list of term nodes
@@ -75,6 +75,25 @@ paths:
           type: integer
           description: Offset from beginning of list where to start gathering nodes
           required: false
+      responses:
+        200:
+          description: Successfully read nodes list operation
+          schema:
+            $ref: '#/definitions/Node'
+
+  /terms/search/{term_name}:
+    get:
+      operationId: term.search_term_by_name
+      tags:
+        - Terms
+      summary: Search for a term by name
+      description: Searches the table for a term based on the name
+      parameters:
+        - name: term_name
+          in: path
+          type: string
+          description: Term name
+          required: true
       responses:
         200:
           description: Successfully read nodes list operation
@@ -361,6 +380,22 @@ paths:
           description: All edges found connected to node
           schema:
             $ref: '#/definitions/Edge'
+            
+  /edges/{guid}:
+    delete:
+      operationId: edge.delete
+      tags:
+        - Edges
+      summary: Delete edge based on guid
+      description: Delete edge based on guid
+      parameters:
+        - name: guid
+          in: path
+          type: string
+          required: True
+      responses:
+        200:
+          description: Edge deleted
 
   /edges/source/{node_id}:
     get:
