@@ -340,6 +340,9 @@ paths:
                 n2:
                   type: string
                   description: Node prop_id property
+                prop:
+                  type: object
+                  description: prop containing edge description
       responses:
         200:
           description: Successfully updated edges

@@ -60,17 +60,21 @@ def read_all():
 
 def update(edge):
     print("put:", edge)
-    statement = "INSERT INTO tbl_edge (n1, n2) VALUES "
+    statement = "INSERT INTO tbl_edge (n1, n2, prop) VALUES "
     for edge_item in edge:
         n1 = edge_item.get("n1")
         n2 = edge_item.get("n2")
+        prop = edge_item.get("prop")
         if n1 is None:
             abort(409, f"The edge must have a n1 key with value of type string")
         if n2 is None:
             abort(409, f"The edge must have a n2 key with value of type string")
+        if prop is None:
+            abort(409, f"The edge must have a prop key with value of type string")
         else:
             statement = statement + f"((SELECT id FROM tbl_node WHERE prop_id = '{n1}'), " \
-                                    f"(SELECT id FROM tbl_node WHERE prop_id = '{n2}')), "
+                                    f"(SELECT id FROM tbl_node WHERE prop_id = '{n2}')," \
+                                    f"'{json.dumps(prop)}'), "
 
     # insert new
     db = Database()
