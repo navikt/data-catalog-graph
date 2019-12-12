@@ -19,7 +19,8 @@ def get_all():
 
 def search_term_by_name(term_name):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' ILIKE 'term.%' AND prop->>'term' ILIKE '{term_name}%'"
+    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' ILIKE 'term.%' AND " \
+                f"(prop->>'term' ILIKE '%{term_name}%' OR prop->>'definisjon' ILIKE '%{term_name}%')"
     nodes = db.execute(statement)
     pattern = '\[([^|]+)\|([A-Z]{1,10}-\d+)\]'
     if nodes is not None:
