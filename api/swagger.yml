@@ -373,8 +373,9 @@ paths:
       parameters:
         - name: guid
           in: path
+          description: id of the edge
           type: string
-          requiered: True
+          required: True
       responses:
         200:
           description: Edge deleted
