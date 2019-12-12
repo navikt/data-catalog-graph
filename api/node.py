@@ -83,14 +83,14 @@ def update(node):
             abort(409, f"The prop dict should contain id property of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
-            statement = statement + f"('{prop_id}', '{json_prop}'), "
+            statement = statement + f"('{prop_id}', '{json_prop}'::jsonb), "
 
     # insert new
     db = Database()
     # Deleting the space and ',' at the end of the statement
     statement = statement[:-2]
     # On receiving a prop_id that already exist it will instead update the prop
-    statement = statement + " ON CONFLICT (prop_id) DO UPDATE SET prop = excluded.prop"
+    statement = statement + " ON CONFLICT (prop_id) DO UPDATE SET prop = tbl_node.prop || excluded.prop"
     print(statement)
     node = db.execute(statement)
     return f"Successfully updated {node} rows", 200
