@@ -8,7 +8,7 @@ import re
 
 def get_all():
     db = Database()
-    statement = "SELECT * FROM tbl_node WHERE prop->>'id' LIKE 'term.%'"
+    statement = "SELECT * FROM tbl_node WHERE prop->>'id' ILIKE 'term.%'"
     nodes = db.execute(statement)
 
     if nodes is not None:
@@ -19,15 +19,14 @@ def get_all():
 
 def search_term_by_name(term_name):
     db = Database()
-    statment = f"SELECT * FROM tbl_node WHERE prop->>'id' LIKE 'term.%' AND prop->>'term' LIKE '{term_name}%'"
-    nodes = db.execute(statment)
+    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' ILIKE 'term.%' AND prop->>'term' ILIKE '{term_name}%'"
+    nodes = db.execute(statement)
     pattern = '\[([^|]+)\|([A-Z]{1,10}-\d+)\]'
     if nodes is not None:
         term_list = []
         for term in nodes:
-            name = term['prop']['term']
-            description = re.sub(pattern, r'\1',term['prop']['definisjon'])
-            term_list.append({'term': name, 'description': description})
+            description = re.sub(pattern, r'\1', term['prop']['definisjon'])
+            term_list.append({'id': term['prop']['id'], 'term': term['prop']['term'], 'description': description})
 
         return term_list, 200
 
