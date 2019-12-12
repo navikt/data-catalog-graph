@@ -101,6 +101,6 @@ def delete(guid):
     delete_edge = db.execute(statement)
 
     if delete_edge is not None:
-        return delete_edge, 200
+        return f"Successfully deleted {delete_edge} edge", 200
 
     abort(404, "Error deleting edge")
