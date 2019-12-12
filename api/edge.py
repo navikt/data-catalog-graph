@@ -94,15 +94,13 @@ def read_all_edges_of_node(prop_id):
     abort(404, "Error fetching edges")
 
 
-def delete(id):
-    if id in EDGES:
-        del EDGES[id]
-        return make_response(
-            "{id} successfully deleted".format(id=id), 200
-        )
+def delete(guid):
+    db = Database()
 
-    else:
-        abort(
-            404, "Edge with id {id} not found".format(id=id)
-        )
+    statement = f"DELETE FROM tbl_edge WHERE guid='{guid}'"
+    delete_edge = db.execute(statement)
 
+    if delete_edge is not None:
+        return delete_edge, 200
+
+    abort(404, "Error deleting edge")

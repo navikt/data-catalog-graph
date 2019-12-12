@@ -362,3 +362,20 @@ paths:
           description: All edges found belonging to node
           schema:
             $ref: '#/definitions/Edge'
+
+  /edges/{guid}:
+    delete:
+      operationId: edge.delete
+      tags:
+        - Edges
+      summary: Delete edge based on guid
+      description: Delete edge based on guid
+      parameters:
+        - name: guid
+          in: path
+          description: id of the edge
+          type: string
+          requiered: True
+      responses:
+        200:
+          description: Edge deleted
