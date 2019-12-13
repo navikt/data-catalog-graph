@@ -44,6 +44,7 @@ def update(edge):
     statement = statement + " ON CONFLICT (n1, n2) DO UPDATE SET prop = tbl_edge.prop || excluded.prop RETURNING n1"
     print(statement)
     edge = db.execute(statement)
+    commit = db.execute("COMMIT")
     return f"Successfully updated {len(edge)} rows", 200
 
 
