@@ -73,9 +73,7 @@ def update(edge):
             abort(409, f"The edge must have a prop key with value of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
-            statement = statement + f"((SELECT id FROM tbl_node WHERE prop_id = '{n1}'), " \
-                                    f"(SELECT id FROM tbl_node WHERE prop_id = '{n2}')," \
-                                    f"'{json_prop}'::jsonb), "
+            statement = statement + f"((SELECT id FROM tbl_node WHERE prop_id = '{n1}'), (SELECT id FROM tbl_node WHERE prop_id = '{n2}'), '{json_prop}'::jsonb), "
 
     # insert new
     db = Database()
