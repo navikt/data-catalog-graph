@@ -60,6 +60,7 @@ class Database:
                 else:
                     cur.execute(f"SET ROLE '{self.postgres_role}'")
                     result = cur.execute(query)
+                    print(result)
                     affected = f"{cur.rowcount}"
                     self.conn.commit()
                     cur.close()
