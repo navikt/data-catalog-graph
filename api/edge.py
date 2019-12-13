@@ -43,10 +43,7 @@ def update(edge):
     statement = statement + " ON CONFLICT (n1, n2) DO UPDATE SET prop = tbl_edge.prop || excluded.prop RETURNING n1"
     print(statement)
     edge = db.execute(statement)
-    if edge is not None:
-        return "Successfully updated rows", 200
-
-    abort(409, "Unable to update rows")
+    return f"Successfully updated {len(edge)} rows", 200
 
 def read_all_edges_of_node(prop_id):
     print("get:",prop_id)
