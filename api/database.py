@@ -60,8 +60,8 @@ class Database:
                 else:
                     cur.execute(f"SET ROLE '{self.postgres_role}'")
                     result = cur.execute(query)
-                    self.conn.commit()
                     affected = f"{cur.rowcount}"
+                    self.conn.commit()
                     cur.close()
                     return affected
         except psycopg2.DatabaseError as e:
