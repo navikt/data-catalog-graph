@@ -49,6 +49,10 @@ definitions:
           type: string
           description: prop_id of node
           example: "test_prop_id.2131234"
+        prop:
+          type: string
+          description: JSON payload
+          example: "{'id': 'PII.PURPOSE.PENSJON'}"
         guid:
           type: string
           description: Edge id of prop
