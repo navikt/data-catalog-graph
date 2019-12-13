@@ -43,7 +43,7 @@ def update(edge):
     statement = statement + " ON CONFLICT (n1, n2) DO UPDATE SET prop = tbl_edge.prop || excluded.prop RETURNING n1"
     print(statement)
     edge = db.execute(statement)
-    return f"Successfully updated {edge} rows", 200
+    return f"Successfully updated rows", 200
 
 
 def read_all_edges_of_node(prop_id):
