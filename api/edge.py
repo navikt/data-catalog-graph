@@ -45,6 +45,7 @@ def update(edge):
     edge = db.execute(statement)
     return f"Successfully updated {len(edge)} rows", 200
 
+
 def read_all_edges_of_node(prop_id):
     print("get:",prop_id)
     db = Database()
