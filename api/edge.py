@@ -2,6 +2,7 @@
 import json
 from database import Database
 from flask import make_response, abort
+import logging
 
 
 def read_all():
@@ -32,10 +33,11 @@ def update(edge):
         if prop is None:
             abort(409, f"The edge must have a prop key with value of type string")
         else:
+            n1_id = json.dumps(db.execute(f"SELECT id FROM tbl_node WHERE prop_id = '{n1}'")[0]['id'])
+            n2_id = json.dumps(db.execute(f"SELECT id FROM tbl_node WHERE prop_id = '{n2}'")[0]['id'])
+            logging.warning(f"Ids: {n1_id}, {n2_id}")
             json_prop = json.dumps(prop).replace("\'", "''")
-            statement = statement + f"((SELECT id FROM tbl_node WHERE prop_id = '{n1}'), " \
-                                    f"(SELECT id FROM tbl_node WHERE prop_id = '{n2}'), " \
-                                    f"'{json_prop}'::jsonb), "
+            statement = statement + f"({n1_id}, {n2_id}, '{json_prop}'::jsonb), "
 
     # insert new
 
@@ -43,7 +45,7 @@ def update(edge):
     statement = statement[:-2]
     # On receiving a prop_id that already exist it will instead update the prop
     statement = statement + " ON CONFLICT (n1, n2) DO UPDATE SET prop = tbl_edge.prop || excluded.prop RETURNING n1"
-    print(statement)
+    logging.warning(statement)
     edge = db.execute(statement)
     return f"Successfully updated {len(edge)} rows", 200
 
