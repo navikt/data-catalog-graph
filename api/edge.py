@@ -33,9 +33,9 @@ def update(edge):
         if prop is None:
             abort(409, f"The edge must have a prop key with value of type string")
         else:
-            n1_id = db.execute(f"SELECT id FROM tbl_node WHERE prop_id = '{n1}'")
+            n1_id = json.dumps(db.execute(f"SELECT id FROM tbl_node WHERE prop_id = '{n1}'"))
             logging.warning(n1_id)
-            n2_id = db.execute(f"SELECT id FROM tbl_node WHERE prop_id = '{n2}'")
+            n2_id = json.dumps(db.execute(f"SELECT id FROM tbl_node WHERE prop_id = '{n2}'"))
             json_prop = json.dumps(prop).replace("\'", "''")
             statement = statement + f"({n1_id}, {n2_id}, '{json_prop}'::jsonb), "
 
