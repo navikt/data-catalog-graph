@@ -82,8 +82,7 @@ def update(edge):
     # Deleting the space and ',' at the end of the statement
     statement = statement[:-2]
     # On receiving a prop_id that already exist it will instead update the prop
-    statement = statement + " ON CONFLICT (n1, n2) DO UPDATE SET n1 = excluded.n1, " \
-                            "n2 = excluded.n2, prop = tbl_edge.prop || excluded.prop"
+    statement = statement + " ON CONFLICT (n1, n2) DO UPDATE SET prop = tbl_edge.prop || excluded.prop"
     print(statement)
     edge = db.execute(statement)
     return f"Successfully updated {edge} rows", 200
