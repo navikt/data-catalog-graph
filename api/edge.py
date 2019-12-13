@@ -2,6 +2,7 @@
 import json
 from database import Database
 from flask import make_response, abort
+import logging
 
 
 def read_all():
@@ -33,6 +34,7 @@ def update(edge):
             abort(409, f"The edge must have a prop key with value of type string")
         else:
             n1_id = db.execute(f"SELECT id FROM tbl_node WHERE prop_id = '{n1}'")
+            logging.warning(n1_id)
             n2_id = db.execute(f"SELECT id FROM tbl_node WHERE prop_id = '{n2}'")
             json_prop = json.dumps(prop).replace("\'", "''")
             statement = statement + f"({n1_id}, {n2_id}, '{json_prop}'::jsonb), "
