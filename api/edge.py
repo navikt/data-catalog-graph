@@ -1,48 +1,7 @@
 # System modules
-from datetime import datetime
 import json
 from database import Database
 from flask import make_response, abort
-
-# 3rd party modules
-from flask import make_response, abort
-
-
-def get_timestamp():
-    return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
-
-
-EDGES = {
-    'n1': 'test_1',
-    'n2': 'test_2',
-    'guid': 'hashed_id_value',
-    'create': 'date_value'
-}
-
-EDGES_OLD = {
-    "1": {
-        "id": "1",
-        "start": "2",
-        "end": "3",
-        "properties": {"type": "defined by term", "versions": [{
-            "version": 1,
-            "validfrom": "2019-1-1",
-            "validto": "2099-12-31",
-            "current": True
-        }]
-    }},
-    "2": {
-        "id": "2",
-        "start": "3",
-        "end": "2",
-         "properties": {"type": "term defines", "versions": [{
-            "version": 1,
-            "validfrom": "2019-1-1",
-            "validto": "2099-12-31",
-            "current": True
-        }]
-    }}
-}
 
 
 def read_all():
@@ -73,14 +32,15 @@ def update(edge):
             abort(409, f"The edge must have a prop key with value of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
-            statement = statement + f"((SELECT id FROM tbl_node WHERE prop_id = '{n1}'), (SELECT id FROM tbl_node WHERE prop_id = '{n2}'), '{json_prop}'::jsonb), "
-
+            statement = statement + f"((SELECT id FROM tbl_node WHERE prop_id = '{n1}'), " \
+                                    f"(SELECT id FROM tbl_node WHERE prop_id = '{n2}'), " \
+                                    f"'{json_prop}'::jsonb), "
     # insert new
     db = Database()
     # Deleting the space and ',' at the end of the statement
     statement = statement[:-2]
     # On receiving a prop_id that already exist it will instead update the prop
-    statement = statement + " ON CONFLICT (n1, n2) DO UPDATE SET prop = tbl_edge.prop || excluded.prop"
+    statement = statement + " ON CONFLICT (n1, n2) DO UPDATE SET prop = tbl_edge.prop || excluded.prop RETURNING n1"
     print(statement)
     edge = db.execute(statement)
     return f"Successfully updated {edge} rows", 200
