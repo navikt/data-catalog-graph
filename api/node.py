@@ -1,3 +1,4 @@
+import logging
 from collections import Sequence
 from datetime import datetime
 import json
@@ -58,6 +59,7 @@ def get_all_nodes_by_pattern(id_pattern):
 
 
 def get_nodes_by_list_of_ids(id_list):
+    logging.warning(id_list)
     db = Database()
     statement = "SELECT * FROM tbl_node WHERE"
     for list_item in id_list:
