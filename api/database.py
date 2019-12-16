@@ -58,10 +58,9 @@ class Database:
         try:
             self.open_connection()
             with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
-                if any(x in query for x in ['select','SELECT']):
+                if query.startswith(('select', 'SELECT')):
                     cur.execute(query)
                     result = cur.fetchall()
-                    self.conn.commit()
                     return result
                 else:
                     cur.execute(f"SET ROLE '{self.postgres_role}'")
