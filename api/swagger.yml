@@ -218,7 +218,7 @@ paths:
         200:
           description: Successfully updated node
 
-  /nodes/edges:
+  /nodes/ids:
     get:
       operationId: node.get_nodes_by_list_of_ids
       tags:
