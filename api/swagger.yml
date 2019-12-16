@@ -150,7 +150,7 @@ paths:
 
   /nodes:
     get:
-      operationId: node.read_all
+      operationId: node.get_all
       tags:
         - Nodes
       summary: Read the entire list of nodes
