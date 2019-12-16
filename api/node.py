@@ -8,7 +8,7 @@ from models import Node, NodeSchema
 from database import Database
 
 
-def read_all():
+def get_all():
     db = Database()
     nodes = db.execute(f"SELECT * FROM tbl_node")
     if nodes is not None:
@@ -17,13 +17,22 @@ def read_all():
     abort(404, f"Error fetching nodes")
 
 
-def read_one(guid):
+def get_by_guid(guid):
     db = Database()
-    node = db.execute(f"SELECT * FROM tbl_node where guid = '{guid}'")
+    node = db.execute(f"SELECT * FROM tbl_node WHERE guid = '{guid}'")
     if node is not None:
         return node, 200
 
     abort(404, f"Node with guid {guid} not found")
+
+
+def get_by_id(id):
+    db = Database()
+    node = db.execute(f"SELECT * FROM tbl_node WHERE id = '{id}'")
+    if node is not None:
+        return node, 200
+
+    abort(404, f"Node with guid {id} not found")
 
 
 def get_by_prop_id(id):
@@ -46,6 +55,22 @@ def get_all_nodes_by_pattern(id_pattern):
         return node, 200
     
     abort(404, f"No node found with prop_id matching {id_pattern}")
+
+
+def get_nodes_by_list_of_ids(id_list):
+    db = Database()
+    statement = "SELECT * FROM tbl_node WHERE"
+    for list_item in id_list:
+        node_id = list_item.get('id')
+        if node_id is None:
+            abort(400, f"Request body is missing ID key of type integer")
+        statement = statement + f' id = {node_id} OR'
+
+    #DELETE the last OR in statement
+    statement = statement[:-2]
+    print(statement)
+    nodes = db.execute(statement)
+    return nodes, 200
 
 
 def create(node):
