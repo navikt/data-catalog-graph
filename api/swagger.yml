@@ -218,24 +218,26 @@ paths:
         200:
           description: Successfully updated node
 
-  /nodes/ids:
+  /nodes/ids/{id_list}:
     get:
       operationId: node.get_nodes_by_list_of_ids
       tags:
         - Nodes
       summary: Gets nodes by using a list of ids
       description: Gets nodes by using a list of ids
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: id of node
+      parameters:
+        - name: id_list
+          in: path
+          description: A list of ids
+          required: True
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: id of node
       responses:
         200:
           description: Successfully retrived the nodes
