@@ -233,11 +233,8 @@ paths:
           schema:
             type: array
             items:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: id of node
+              type: integer
+              description: id of node
       responses:
         200:
           description: Successfully retrived the nodes
@@ -320,8 +317,8 @@ paths:
       operationId: node.get_all_nodes_by_pattern
       tags:
         - Nodes
-      summary: Get node by id
-      description: Get node by id
+      summary: Get nodes by prop_id start pattern
+      description: Get nodes by prop_id start pattern
       parameters:
         - name: id_pattern
           in: path
