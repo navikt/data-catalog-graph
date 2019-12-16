@@ -18,7 +18,7 @@ class Database:
         try:
             dsn = os.environ["POSTGRES_DB"]
             postgres_role = os.environ["POSTGRES_ROLE"]
-        except:
+        except KeyError:
             secrets = vault_api.read_secrets()
             dsn = secrets["POSTGRES_DB"]
             postgres_role = os.environ["POSTGRES_ROLE"]
