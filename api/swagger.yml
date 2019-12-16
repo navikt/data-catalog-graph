@@ -225,19 +225,17 @@ paths:
         - Nodes
       summary: Gets nodes by using a list of ids
       description: Gets nodes by using a list of ids
-      parameters:
-        - name: id_list
-          in: body
-          description: A list of ids
-          required: True
-          schema:
-            type: array
-            items:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: id of node
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: id of node
       responses:
         200:
           description: Successfully retrived the nodes
