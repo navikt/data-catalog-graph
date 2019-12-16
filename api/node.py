@@ -8,7 +8,7 @@ from models import Node, NodeSchema
 from database import Database
 
 
-def read_all():
+def get_all():
     db = Database()
     nodes = db.execute(f"SELECT * FROM tbl_node")
     if nodes is not None:
@@ -17,13 +17,22 @@ def read_all():
     abort(404, f"Error fetching nodes")
 
 
-def read_one(guid):
+def get_by_guid(guid):
     db = Database()
-    node = db.execute(f"SELECT * FROM tbl_node where guid = '{guid}'")
+    node = db.execute(f"SELECT * FROM tbl_node WHERE guid = '{guid}'")
     if node is not None:
         return node, 200
 
     abort(404, f"Node with guid {guid} not found")
+
+
+def get_by_id(id):
+    db = Database()
+    node = db.execute(f"SELECT * FROM tbl_node WHERE id = '{id}'")
+    if node is not None:
+        return node, 200
+
+    abort(404, f"Node with guid {id} not found")
 
 
 def get_by_prop_id(id):

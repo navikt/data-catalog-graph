@@ -5,7 +5,7 @@ from flask import make_response, abort
 import logging
 
 
-def read_all():
+def get_all():
     db = Database()
 
     statement = "SELECT * FROM tbl_edge"
@@ -18,21 +18,21 @@ def read_all():
     abort(404, "Error fetching edges")
 
 
-def update(edge):
-    print("put:", edge)
+def update(edges):
+    print("put:", edges)
     statement = "INSERT INTO tbl_edge (n1, n2, prop) VALUES "
-    for edge_item in edge:
-        n1 = edge_item.get("n1")
-        n2 = edge_item.get("n2")
-        prop = edge_item.get("prop")
+    for edge in edges:
+        n1 = edge.get("n1")
+        n2 = edge.get("n2")
+        prop = json.dumps(edge.get("prop"))
         if n1 is None:
-            abort(409, f"The edge must have a n1 key with value of type string")
+            abort(409, f"The edge must have a source node n1 of type string")
         if n2 is None:
-            abort(409, f"The edge must have a n2 key with value of type string")
+            abort(409, f"The edge must have a target node n2 of type string")
         if prop is None:
-            abort(409, f"The edge must have a prop key with value of type string")
+            abort(409, f"The edge must have a prop with value of type string")
         else:
-            json_prop = json.dumps(prop).replace("\'", "''")
+            json_prop = prop.replace("\'", "''")
             statement = statement + f"((SELECT id FROM tbl_node WHERE prop_id = '{n1}'), " \
                                     f"(SELECT id FROM tbl_node WHERE prop_id = '{n2}'), " \
                                     f"'{json_prop}'::jsonb), "
@@ -47,11 +47,37 @@ def update(edge):
     return f"Successfully updated {len(edge)} rows", 200
 
 
-def read_all_edges_of_node(prop_id):
-    print("get:",prop_id)
+def get_all_edges_of_node(node_id):
+    print("get:", node_id)
     db = Database()
     
-    statement = f"SELECT * FROM tbl_edge WHERE n1='{prop_id}'"
+    statement = f"SELECT * FROM tbl_edge WHERE n1='{node_id}' OR n2='{node_id}'"
+    edges = db.execute(statement)
+
+    if edges is not None:
+        return edges, 200
+
+    abort(404, "Error fetching edges")
+
+
+def get_all_edges_of_source_node(node_id):
+    print("get:", node_id)
+    db = Database()
+
+    statement = f"SELECT * FROM tbl_edge WHERE n1='{node_id}'"
+    edges = db.execute(statement)
+
+    if edges is not None:
+        return edges, 200
+
+    abort(404, "Error fetching edges")
+
+
+def get_all_edges_of_target_node(node_id):
+    print("get:", node_id)
+    db = Database()
+
+    statement = f"SELECT * FROM tbl_edge WHERE n2='{node_id}'"
     edges = db.execute(statement)
 
     if edges is not None:
