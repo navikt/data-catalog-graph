@@ -54,6 +54,43 @@ definitions:
           description: When the edge was created
           example: "2019-11-20 14:55:54.160288"
 
+    EdgeWithNode:
+      title: Edge
+      description: Edge for nodes
+      required:
+        - prop
+        - source_node
+        - target_node
+        - edge_prop
+      properties:
+        id:
+          type: integer
+          description: Unique node id
+        prop:
+          type: string
+          description: JSON payload
+          example: "{'id': 'PII.PURPOSE.PENSJON'}"
+        created:
+          type: string
+          description: When the node was created
+          example: "2019-11-20 14:55:54.160288"
+        source_node:
+          type: integer
+          description: id of source node
+          example: 259
+        target_node:
+          type: integer
+          description: id of target node
+          example: 260
+        edge_prop:
+          type: string
+          description: props array (json)
+          example: "['belongs to']"
+        edge_created:
+          type: string
+          description: When the edge was created
+          example: "2019-11-20 14:55:54.160288"
+
 # Paths supported by the server application
 paths:
 
@@ -416,7 +453,7 @@ paths:
         200:
           description: All edges found connected to source node
           schema:
-            $ref: '#/definitions/Edge'
+            $ref: '#/definitions/EdgeWithNode'
   /edges/target/{node_id}:
     get:
       operationId: edge.get_all_edges_of_target_node
