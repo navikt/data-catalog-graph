@@ -64,7 +64,9 @@ def get_all_edges_of_source_node(node_id):
     print("get:", node_id)
     db = Database()
 
-    statement = f"SELECT * FROM tbl_edge WHERE n1='{node_id}'"
+    statement = f"SELECT n.*, e.n1 source_node, e.n2 target_node, e.prop edge_prop, e.created edge_created " \
+                f"FROM tbl_node n, tbl_edge e " \
+                f"WHERE n.id = e.n2 AND n.id IN (SELECT n2 FROM tbl_edge WHERE n1 = {node_id});"
     edges = db.execute(statement)
 
     if edges is not None:
