@@ -17,10 +17,15 @@ def get_all():
     abort(404, "No terms found")
 
 
-def search_term_by_name(term_name):
+def search_term_by_name(term_name, term_status):
     db = Database()
+    status = term_status
+    if status is None:
+        status = 'godkjent'
+
     statement = f"SELECT * FROM tbl_node WHERE prop->>'id' ILIKE 'term.%' AND " \
-                f"(prop->>'term' ILIKE '%{term_name}%' OR prop->>'definisjon' ILIKE '%{term_name}%')"
+                f"(prop->>'term' ILIKE '%{term_name}%' OR prop->>'definisjon' ILIKE '%{term_name}%') AND " \
+                f"prop->>'status' ILIKE '{status}%' "
     nodes = db.execute(statement)
     pattern = '\[([^|]+)\|([A-Z]{1,10}-\d+)\]'
     if nodes is not None:
