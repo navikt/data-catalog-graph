@@ -17,7 +17,7 @@ def get_all():
     abort(404, "No terms found")
 
 
-def search_term_by_name(term_name, term_status):
+def search_term_by_name(term_name, term_status=None):
     db = Database()
     status = term_status
     if status is None:
