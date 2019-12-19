@@ -32,7 +32,13 @@ def search_term_by_name(term_name, term_status):
         term_list = []
         for term in nodes:
             description = re.sub(pattern, r'\1', term['prop']['definisjon'])
-            term_list.append({'id': term['prop']['id'], 'term': term['prop']['term'], 'description': description})
+            term_list.append({
+                'id': term['prop']['id'],
+                'term': term['prop']['term'],
+                'description': description,
+                'status': term['prop']['status'],
+                'prop': term['prop']
+            })
 
         return term_list, 200
 
