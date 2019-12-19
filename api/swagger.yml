@@ -118,7 +118,7 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /terms/search/{term_name}/{term_status}:
+  /terms/search:
     get:
       operationId: term.search_term_by_name
       tags:
@@ -127,12 +127,12 @@ paths:
       description: Searches the table for a term based on the name
       parameters:
         - name: term_name
-          in: path
+          in: query
           type: string
           description: Term name
           required: true
         - name: term_status
-          in: path
+          in: query
           type: string
           description: Term status
           required: false
