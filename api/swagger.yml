@@ -118,7 +118,7 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /terms/search/{term_name}:
+  /terms/search/{term_name}/{term_status}:
     get:
       operationId: term.search_term_by_name
       tags:
@@ -131,6 +131,11 @@ paths:
           type: string
           description: Term name
           required: true
+        - name: term_status
+          in: path
+          type: string
+          description: Term status
+          required: false
       responses:
         200:
           description: Successfully read nodes list operation
