@@ -135,7 +135,7 @@ paths:
           in: query
           type: string
           description: Term status
-          required: false
+          required: true
       responses:
         200:
           description: Successfully read nodes list operation
