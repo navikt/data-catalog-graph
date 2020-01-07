@@ -403,7 +403,7 @@ paths:
 
   /node/search/{id_pattern}:
     get:
-      operationId: node.get_all_nodes_by_pattern
+      operationId: node.get_all_nodes_by_type
       tags:
         - Nodes
       summary: Get nodes by prop_id start pattern
