@@ -23,9 +23,20 @@ definitions:
         prop:
           type: string
           description: JSON payload
-          example: "{'id': 'PII.PURPOSE.PENSJON'}" 
-        created:
+          example: "{'id': 'PII.PURPOSE.PENSJON'}"
+        type:
           type: string
+          description: type of the prop
+        valid_from:
+          type: string
+          description: When the node was created
+          example: "2019-11-20 14:55:54.160288"
+        valid_to:
+          type: string
+          description: When the node was created
+          example: "2019-11-20 14:55:54.160288"
+        valid:
+          type: boolean
           description: When the node was created
           example: "2019-11-20 14:55:54.160288"
 
@@ -70,8 +81,16 @@ definitions:
           type: string
           description: JSON payload
           example: "{'id': 'PII.PURPOSE.PENSJON'}"
-        created:
+        valid_from:
           type: string
+          description: When the node was created
+          example: "2019-11-20 14:55:54.160288"
+        valid_to:
+          type: string
+          description: When the node was created
+          example: "2019-11-20 14:55:54.160288"
+        valid:
+          type: boolean
           description: When the node was created
           example: "2019-11-20 14:55:54.160288"
         source_node:
@@ -139,6 +158,25 @@ paths:
       responses:
         200:
           description: Successfully read nodes list operation
+          schema:
+            $ref: '#/definitions/Node'
+
+  /term/prop/{id}:
+    get:
+      operationId: term.get_valid_node_by_prop_id
+      tags:
+        - Terms
+      summary: Get term by id
+      description: Get term by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the term
+          type: string
+          required: True
+      responses:
+        200:
+          description: Term found
           schema:
             $ref: '#/definitions/Node'
 
@@ -230,6 +268,9 @@ paths:
             items:
               type: object
               properties:
+                type:
+                  type: string
+                  description: Prop type
                 prop:
                   type: object
                   description: Node properties
@@ -253,12 +294,39 @@ paths:
             items:
               type: object
               properties:
+                type:
+                  type: string
+                  description: Prop type
                 prop:
                   type: object
                   description: Node properties
       responses:
         200:
           description: Successfully updated node
+
+  /nodes/valid:
+    get:
+      operationId: node.get_all_valid
+      tags:
+        - Nodes
+      summary: Read the entire list of nodes
+      description: Read the list of nodes
+      parameters:
+        - name: length
+          in: query
+          type: integer
+          description: Number of nodes to get from nodes
+          required: false
+        - name: offset
+          in: query
+          type: integer
+          description: Offset from beginning of list where to start gathering nodes
+          required: false
+      responses:
+        200:
+          description: Successfully read nodes list operation
+          schema:
+            $ref: '#/definitions/Node'
 
   /node/{prop_id}:
     delete:
@@ -294,25 +362,6 @@ paths:
           description: Node found
           schema:
             $ref: '#/definitions/Node'
-
-  /node/{guid}:
-    get:
-      operationId: node.get_by_guid
-      tags:
-        - Nodes
-      summary: Get node by guid
-      description: Get node by guid
-      parameters:
-        - name: guid
-          in: path
-          description: guid of the node
-          type: string
-          required: True
-      responses:
-        200:
-          description: Node found
-          schema:
-            $ref: '#/definitions/Node'
     
   /node/prop/{id}:
     get:
@@ -333,9 +382,47 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
+  /node/valid/prop/{id}:
+    get:
+      operationId: node.get_valid_node_by_prop_id
+      tags:
+        - Nodes
+      summary: Get node by id
+      description: Get node by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the node
+          type: string
+          required: True
+      responses:
+        200:
+          description: Node found
+          schema:
+            $ref: '#/definitions/Node'
+
   /node/search/{id_pattern}:
     get:
       operationId: node.get_all_nodes_by_pattern
+      tags:
+        - Nodes
+      summary: Get nodes by prop_id start pattern
+      description: Get nodes by prop_id start pattern
+      parameters:
+        - name: id_pattern
+          in: path
+          description: pattern for id of the node
+          type: string
+          required: True
+      responses:
+        200:
+          description: Node found
+          schema:
+            $ref: '#/definitions/Node'
+
+  /node/valid/search/{id_pattern}:
+    get:
+      operationId: node.get_all_valid_nodes_by_type
       tags:
         - Nodes
       summary: Get nodes by prop_id start pattern
@@ -405,6 +492,27 @@ paths:
         200:
           description: Successfully updated edges
 
+    delete:
+      operationId: edge.delete
+      tags:
+        - Edges
+      summary: Delete edge based on guid
+      description: Delete edge based on guid
+      parameters:
+        - name: n1
+          in: query
+          type: integer
+          description: source node
+          required: true
+        - name: n2
+          in: query
+          type: integer
+          description: targe node
+          required: true
+      responses:
+        200:
+          description: Edge deleted
+
   /edges/{node_id}:
     get:
       operationId: edge.get_all_edges_of_node
@@ -424,23 +532,6 @@ paths:
           schema:
             $ref: '#/definitions/Edge'
 
-  /edges/{guid}:
-    delete:
-      operationId: edge.delete
-      tags:
-        - Edges
-      summary: Delete edge based on guid
-      description: Delete edge based on guid
-      parameters:
-        - name: guid
-          in: path
-          description: id of the edge
-          type: string
-          required: True
-      responses:
-        200:
-          description: Edge deleted
-
   /edges/source/{node_id}:
     get:
       operationId: edge.get_all_edges_of_source_node
@@ -459,6 +550,7 @@ paths:
           description: All edges found connected to source node
           schema:
             $ref: '#/definitions/EdgeWithNode'
+
   /edges/target/{node_id}:
     get:
       operationId: edge.get_all_edges_of_target_node
