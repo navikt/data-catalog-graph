@@ -33,7 +33,7 @@ def get_by_id(id):
 
 def get_by_prop_id(id):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE prop_id = '{id}'"
+    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
     print(statement)
     node = db.execute(statement)
     if node is not None:
@@ -44,7 +44,7 @@ def get_by_prop_id(id):
 
 def get_valid_node_by_prop_id(id):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE prop_id = '{id}'"
+    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'id' = '{id}'"
     print(statement)
     node = db.execute(statement)
     if node is not None:
@@ -55,7 +55,7 @@ def get_valid_node_by_prop_id(id):
 
 def get_all_nodes_by_type(id_pattern):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE type ILIKE '%{id_pattern}%' "
+    statement = f"SELECT * FROM tbl_node WHERE prop->>'type' ILIKE '%{id_pattern}%' "
     print(statement)
     node = db.execute(statement)
     if node is not None:
@@ -66,7 +66,7 @@ def get_all_nodes_by_type(id_pattern):
 
 def get_all_valid_nodes_by_type(id_pattern):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND type ILIKE '%{id_pattern}%' "
+    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE '%{id_pattern}%' "
     print(statement)
     node = db.execute(statement)
     if node is not None:
@@ -94,21 +94,20 @@ def get_nodes_by_list_of_ids(id_list):
 
 def create(node):
     print(node)
-    statement = "INSERT INTO tbl_node (prop, schema, prop_id, type, valid) VALUES"
+    statement = "INSERT INTO tbl_node (prop, valid) VALUES"
     for node_item in node:
         prop = node_item.get("prop")
-        prop_type = node_item.get("type")
-        schema = node_item.get("schema")
         if prop is None:
             abort(409, f"The node must have a prop key with value of type dict")
         prop_id = prop.get("id")
         if prop_id is None:
             abort(409, f"The prop dict should contain id property of type string")
+        prop_type = prop.get("type")
         if prop_type is None:
-            abort(409, f"The node must have a type key with value of type string")
+            abort(409, f"The prop dict should contain type property of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
-            statement = statement + f" ('{json_prop}', '{schema}','{prop_id}', '{prop_type}', TRUE),"
+            statement = statement + f" ('{json_prop}', TRUE),"
 
     # insert new
     db = Database()
@@ -121,23 +120,22 @@ def create(node):
 
 def update(node):
     print("put:", node)
-    update_statement = "UPDATE tbl_node SET valid_to = now(), valid = FALSE WHERE valid_to IS Null AND prop_id IN ("
-    create_statement = "INSERT INTO tbl_node (prop, schema, prop_id, type, valid) VALUES"
+    update_statement = "UPDATE tbl_node SET valid_to = now(), valid = FALSE WHERE valid_to IS Null AND prop->>'id' IN ("
+    create_statement = "INSERT INTO tbl_node (prop, valid) VALUES"
     for node_item in node:
         prop = node_item.get("prop")
-        prop_type = node_item.get("type")
-        schema = node_item.get("schema")
         if prop is None:
             abort(409, f"The node must have a prop key with value of type dict")
         prop_id = prop.get("id")
         if prop_id is None:
             abort(409, f"The prop dict should contain id property of type string")
+        prop_type = prop.get("type")
         if prop_type is None:
-            abort(409, f"The node must have a type key with value of type string")
+            abort(409, f"The prop dict should contain type property of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
             update_statement = update_statement + f" '{prop_id}',"
-            create_statement = create_statement + f" ('{json_prop}', '{schema}','{prop_id}', '{prop_type}', TRUE),"
+            create_statement = create_statement + f" ('{json_prop}', TRUE),"
 
     # insert new
     db = Database()
@@ -159,16 +157,16 @@ def delete(prop_id):
 
     # Checking if node with prop_id exist
     db = Database()
-    check_statement = f"SELECT * FROM tbl_node WHERE prop_id = '{prop_id}'"
+    check_statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{prop_id}'"
     node = db.execute(check_statement)
     if node is None:
-        abort(404, f"Could not find node with prop_id = '{prop_id}'")
+        abort(404, f"Could not find node with prop->>'id' = '{prop_id}'")
     else:
         node_id = node.get('id')
         # Deleting all edges before deleting node
-        delete_edges = f"DELETE FROM tbl_edge where n1 = '{node_id}' or n2 = '{node_id}'"
+        delete_edges = f"DELETE FROM tbl_edge where n1 = {node_id} or n2 = {node_id}"
         db.execute(delete_edges)
         # Deleting node after all references to it is deleted
-        statement = f"DELETE FROM tbl_node WHERE prop_id = '{prop_id}'"
+        statement = f"DELETE FROM tbl_node WHERE prop->>'id' = '{prop_id}'"
         db.execute(statement)
-        return f"Node with prop_id = {prop_id} deleted", 200
+        return f"Node with prop id = {prop_id} deleted", 200
