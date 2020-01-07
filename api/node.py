@@ -63,7 +63,7 @@ def get_nodes_by_list_of_ids(id_list):
 
 def create(node):
     print(node)
-    statement = "INSERT INTO tbl_node (prop, schema, prop_id, type, valid) VALUES "
+    statement = "INSERT INTO tbl_node (prop, schema, prop_id, type, valid) VALUES"
     for node_item in node:
         prop = node_item.get("prop")
         prop_type = node_item.get("type")
@@ -77,12 +77,12 @@ def create(node):
             abort(409, f"The node must have a type key with value of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
-            statement = statement + f"('{json_prop}', '{schema}','{prop_id}', '{prop_type}', TRUE), "
+            statement = statement + f" ('{json_prop}', '{schema}','{prop_id}', '{prop_type}', TRUE),"
 
     # insert new
     db = Database()
     # Deleting the space and ',' at the end of the statement
-    statement = statement[:-2]
+    statement = statement[:-1]
     print(statement)
     node = db.execute(statement)
     return f" Successfully created {node} rows", 200
@@ -90,26 +90,36 @@ def create(node):
 
 def update(node):
     print("put:", node)
-    statement = "INSERT INTO tbl_node (prop_id, prop) VALUES "
+    update_statement = "UPDATE tbl_node SET valid_to = now(), valid = FALSE WHERE valid_to IS Null AND prop_id IN ("
+    create_statement = "INSERT INTO tbl_node (prop, schema, prop_id, type, valid) VALUES"
     for node_item in node:
         prop = node_item.get("prop")
+        prop_type = node_item.get("type")
+        schema = node_item.get("schema")
         if prop is None:
             abort(409, f"The node must have a prop key with value of type dict")
         prop_id = prop.get("id")
         if prop_id is None:
             abort(409, f"The prop dict should contain id property of type string")
+        if prop_type is None:
+            abort(409, f"The node must have a type key with value of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
-            statement = statement + f"('{prop_id}', '{json_prop}'::jsonb), "
+            update_statement = update_statement + f" '{prop_id}',"
+            create_statement = create_statement + f" ('{json_prop}', '{schema}','{prop_id}', '{prop_type}', TRUE),"
 
     # insert new
     db = Database()
-    # Deleting the space and ',' at the end of the statement
-    statement = statement[:-2]
-    # On receiving a prop_id that already exist it will instead update the prop
-    statement = statement + " ON CONFLICT (prop_id) DO UPDATE SET prop = tbl_node.prop || excluded.prop"
-    print(statement)
-    node = db.execute(statement)
+    # Deleting the space and ',' at the end of each statement
+    update_statement = update_statement[:-1]
+    update_statement = update_statement + ");"
+    create_statement = create_statement[:-1]
+    print(update_statement)
+    print(create_statement)
+    # Updating valid state of previous nodes to false with the provided prop ids
+    db.execute(update_statement)
+    # Creating new nodes with valid states
+    node = db.execute(create_statement)
     return f"Successfully updated {node} rows", 200
 
 
