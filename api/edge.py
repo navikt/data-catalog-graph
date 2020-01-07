@@ -32,8 +32,8 @@ def update(edges):
             abort(409, f"The edge must have a prop with value of type dict")
         else:
             json_prop = prop.replace("\'", "''")
-            statement = statement + f""" ((SELECT id FROM tbl_node WHERE prop_id = '{n1}'), 
-                                        (SELECT id FROM tbl_node WHERE prop_id = '{n2}'), 
+            statement = statement + f""" ((SELECT id FROM tbl_node WHERE prop->>'id' = '{n1}'), 
+                                        (SELECT id FROM tbl_node WHERE prop->>'id' = '{n2}'), 
                                         '{json_prop}'::jsonb),"""
 
     # insert new
@@ -50,7 +50,7 @@ def get_all_edges_of_node(node_id):
     print("get:", node_id)
     db = Database()
     
-    statement = f"SELECT * FROM tbl_edge WHERE n1='{node_id}' OR n2='{node_id}'"
+    statement = f"SELECT * FROM tbl_edge WHERE n1 = {node_id} OR n2 = {node_id}"
     edges = db.execute(statement)
 
     if edges is not None:
@@ -78,7 +78,7 @@ def get_all_edges_of_target_node(node_id):
     print("get:", node_id)
     db = Database()
 
-    statement = f"SELECT * FROM tbl_edge WHERE n2='{node_id}'"
+    statement = f"SELECT * FROM tbl_edge WHERE n2={node_id}"
     edges = db.execute(statement)
 
     if edges is not None:
@@ -87,10 +87,10 @@ def get_all_edges_of_target_node(node_id):
     abort(404, "Error fetching edges")
 
 
-def delete(guid):
+def delete(n1, n2):
     db = Database()
 
-    statement = f"DELETE FROM tbl_edge WHERE guid='{guid}'"
+    statement = f"DELETE FROM tbl_edge WHERE n1={n1} AND n2 = {n2}'"
     delete_edge = db.execute(statement)
 
     if delete_edge is not None:
