@@ -13,6 +13,15 @@ def get_all():
     abort(404, f"Error fetching nodes")
 
 
+def get_all_valid():
+    db = Database()
+    nodes = db.execute(f"SELECT * FROM tbl_node where valid = TRUE")
+    if nodes is not None:
+        return nodes
+
+    abort(404, f"Error fetching nodes")
+
+
 def get_by_id(id):
     db = Database()
     node = db.execute(f"SELECT * FROM tbl_node WHERE id = '{id}'")
@@ -35,12 +44,23 @@ def get_by_prop_id(id):
 
 def get_all_nodes_by_type(id_pattern):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE type LIKE '{id_pattern}%' "
+    statement = f"SELECT * FROM tbl_node WHERE type ILIKE '%{id_pattern}%' "
     print(statement)
     node = db.execute(statement)
     if node is not None:
         return node, 200
     
+    abort(404, f"No node found with prop_id matching {id_pattern}")
+
+
+def get_all_valid_nodes_by_type(id_pattern):
+    db = Database()
+    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND type ILIKE '%{id_pattern}%' "
+    print(statement)
+    node = db.execute(statement)
+    if node is not None:
+        return node, 200
+
     abort(404, f"No node found with prop_id matching {id_pattern}")
 
 
