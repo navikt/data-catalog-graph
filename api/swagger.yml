@@ -88,8 +88,25 @@ definitions:
           type: string
           description: JSON payload
           example: "{'id': 'PII.PURPOSE.PENSJON'}"
-        created:
+        schema:
           type: string
+          description: Origin of the prop
+        prop_id:
+          type: string
+          description: id of the prop
+        type:
+          type: string
+          description: type of the prop
+        valid_from:
+          type: string
+          description: When the node was created
+          example: "2019-11-20 14:55:54.160288"
+        valid_to:
+          type: string
+          description: When the node was created
+          example: "2019-11-20 14:55:54.160288"
+        valid:
+          type: boolean
           description: When the node was created
           example: "2019-11-20 14:55:54.160288"
         source_node:
