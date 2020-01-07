@@ -47,14 +47,15 @@ def get_all_nodes_by_type(id_pattern):
 def get_nodes_by_list_of_ids(id_list):
     logging.warning(id_list)
     db = Database()
-    statement = "SELECT * FROM tbl_node WHERE"
+    statement = "SELECT * FROM tbl_node WHERE id IN ("
     for list_item in id_list:
         if list_item is None:
             abort(400, f"Request body is missing ID key of type integer")
-        statement = statement + f' id = {list_item} OR'
+        statement = statement + f' {list_item},'
 
-    #DELETE the last OR in statement
-    statement = statement[:-2]
+    #DELETE the last "," in statement
+    statement = statement[:-1]
+    statement = statement + ");"
     print(statement)
     nodes = db.execute(statement)
     return nodes, 200
