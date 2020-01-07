@@ -1,11 +1,6 @@
 import logging
-from collections import Sequence
-from datetime import datetime
 import json
-from flask import make_response, abort
-from config import db
-import psycopg2.extras
-from models import Node, NodeSchema
+from flask import abort
 from database import Database
 
 
@@ -16,15 +11,6 @@ def get_all():
         return nodes
 
     abort(404, f"Error fetching nodes")
-
-
-def get_by_guid(guid):
-    db = Database()
-    node = db.execute(f"SELECT * FROM tbl_node WHERE guid = '{guid}'")
-    if node is not None:
-        return node, 200
-
-    abort(404, f"Node with guid {guid} not found")
 
 
 def get_by_id(id):
