@@ -5,7 +5,7 @@ import re
 
 def get_all():
     db = Database()
-    statement = "SELECT * FROM tbl_node WHERE valid = TRUE type ILIKE 'term'"
+    statement = "SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'term'"
     nodes = db.execute(statement)
 
     if nodes is not None:
@@ -16,7 +16,7 @@ def get_all():
 
 def get_valid_node_by_prop_id(id):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND type ILIKE 'term' AND prop_id = '{id}'"
+    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'term' AND prop->>'id' = '{id}'"
     print(statement)
     node = db.execute(statement)
     if node is not None:
@@ -28,7 +28,7 @@ def get_valid_node_by_prop_id(id):
 def search_term_by_name(term_name, term_status='godkjent'):
     db = Database()
 
-    statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE type ILIKE 'term' AND 
+    statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'term' AND 
                   (prop->>'term' ILIKE '%{term_name}%' OR prop->>'definisjon' ILIKE '%{term_name}%') AND 
                   prop->>'status' ILIKE '{term_status}%' """
     nodes = db.execute(statement)
