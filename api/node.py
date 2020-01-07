@@ -55,7 +55,7 @@ def get_valid_node_by_prop_id(id):
 
 def get_all_nodes_by_type(id_pattern):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE prop->>'type' ILIKE '%{id_pattern}%' "
+    statement = f"SELECT * FROM tbl_node WHERE prop->>'type' ILIKE '{id_pattern}' "
     print(statement)
     node = db.execute(statement)
     if node is not None:
@@ -66,7 +66,7 @@ def get_all_nodes_by_type(id_pattern):
 
 def get_all_valid_nodes_by_type(id_pattern):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE '%{id_pattern}%' "
+    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE '{id_pattern}' "
     print(statement)
     node = db.execute(statement)
     if node is not None:
