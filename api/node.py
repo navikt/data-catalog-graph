@@ -33,9 +33,9 @@ def get_by_prop_id(id):
     abort(404, f"Node with prop.id {id} not found")
 
 
-def get_all_nodes_by_pattern(id_pattern):
+def get_all_nodes_by_type(id_pattern):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE prop_id LIKE '{id_pattern}%' "
+    statement = f"SELECT * FROM tbl_node WHERE type LIKE '{id_pattern}%' "
     print(statement)
     node = db.execute(statement)
     if node is not None:
