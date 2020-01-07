@@ -20,7 +20,7 @@ def get_all():
 
 def update(edges):
     print("put:", edges)
-    statement = "INSERT INTO tbl_edge (n1, n2, prop) VALUES "
+    statement = "INSERT INTO tbl_edge (n1, n2, prop) VALUES"
     for edge in edges:
         n1 = edge.get("n1")
         n2 = edge.get("n2")
@@ -30,17 +30,17 @@ def update(edges):
         if n2 is None:
             abort(409, f"The edge must have a target node n2 of type string")
         if prop is None:
-            abort(409, f"The edge must have a prop with value of type string")
+            abort(409, f"The edge must have a prop with value of type dict")
         else:
             json_prop = prop.replace("\'", "''")
-            statement = statement + f"((SELECT id FROM tbl_node WHERE prop_id = '{n1}'), " \
-                                    f"(SELECT id FROM tbl_node WHERE prop_id = '{n2}'), " \
-                                    f"'{json_prop}'::jsonb), "
+            statement = statement + f""" ((SELECT id FROM tbl_node WHERE prop_id = '{n1}'), 
+                                        (SELECT id FROM tbl_node WHERE prop_id = '{n2}'), 
+                                        '{json_prop}'::jsonb),"""
 
     # insert new
     db = Database()
     # Deleting the space and ',' at the end of the statement
-    statement = statement[:-2]
+    statement = statement[:-1]
     # On receiving a prop_id that already exist it will instead update the prop
     statement = statement + " ON CONFLICT (n1, n2) DO UPDATE SET prop = tbl_edge.prop || excluded.prop RETURNING n1"
     edge = db.execute(statement)
@@ -64,9 +64,9 @@ def get_all_edges_of_source_node(node_id):
     print("get:", node_id)
     db = Database()
 
-    statement = f"SELECT n.*, e.n1 source_node, e.n2 target_node, e.prop edge_prop, e.created edge_created " \
-                f"FROM tbl_node n, tbl_edge e " \
-                f"WHERE n.id = e.n2 AND n.id IN (SELECT n2 FROM tbl_edge WHERE n1 = {node_id});"
+    statement = f"""SELECT n.*, e.n1 source_node, e.n2 target_node, e.prop edge_prop, e.created edge_created 
+                    FROM tbl_node n, tbl_edge e 
+                    WHERE n.id = e.n2 AND n.id IN (SELECT n2 FROM tbl_edge WHERE n1 = {node_id});"""
     edges = db.execute(statement)
 
     if edges is not None:
