@@ -227,7 +227,7 @@ paths:
 
   /nodes:
     get:
-      operationId: node.get_all
+      operationId: node.get_all_valid
       tags:
         - Nodes
       summary: Read the entire list of nodes
@@ -265,6 +265,9 @@ paths:
             items:
               type: object
               properties:
+                type:
+                  type: string
+                  description: Prop type
                 prop:
                   type: object
                   description: Node properties

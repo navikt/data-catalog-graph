@@ -1,8 +1,7 @@
 # System modules
 import json
 from database import Database
-from flask import make_response, abort
-import logging
+from flask import  abort
 
 
 def get_all():

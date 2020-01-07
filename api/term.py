@@ -14,6 +14,17 @@ def get_all():
     abort(404, "No terms found")
 
 
+def get_valid_node_by_prop_id(id):
+    db = Database()
+    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND type ILIKE 'term' AND prop_id = '{id}'"
+    print(statement)
+    node = db.execute(statement)
+    if node is not None:
+        return node, 200
+
+    abort(404, f"Node with prop.id {id} not found")
+
+
 def search_term_by_name(term_name, term_status='godkjent'):
     db = Database()
 
