@@ -24,7 +24,7 @@ def get_by_id(id):
 
 def get_by_prop_id(id):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
+    statement = f"SELECT * FROM tbl_node WHERE prop_id = '{id}'"
     print(statement)
     node = db.execute(statement)
     if node is not None:
