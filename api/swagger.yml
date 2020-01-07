@@ -492,6 +492,27 @@ paths:
         200:
           description: Successfully updated edges
 
+    delete:
+      operationId: edge.delete
+      tags:
+        - Edges
+      summary: Delete edge based on guid
+      description: Delete edge based on guid
+      parameters:
+        - name: n1
+          in: query
+          type: integer
+          description: source node
+          required: true
+        - name: n2
+          in: query
+          type: integer
+          description: targe node
+          required: true
+      responses:
+        200:
+          description: Edge deleted
+
   /edges/{node_id}:
     get:
       operationId: edge.get_all_edges_of_node
@@ -510,23 +531,6 @@ paths:
           description: All edges found connected to node
           schema:
             $ref: '#/definitions/Edge'
-
-  /edges/{guid}:
-    delete:
-      operationId: edge.delete
-      tags:
-        - Edges
-      summary: Delete edge based on guid
-      description: Delete edge based on guid
-      parameters:
-        - name: guid
-          in: path
-          description: id of the edge
-          type: string
-          required: True
-      responses:
-        200:
-          description: Edge deleted
 
   /edges/source/{node_id}:
     get:
