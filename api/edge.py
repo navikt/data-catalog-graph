@@ -1,7 +1,7 @@
 # System modules
 import json
 from database import Database
-from flask import  abort
+from flask import abort
 
 
 def get_all():
