@@ -63,17 +63,21 @@ def get_nodes_by_list_of_ids(id_list):
 
 def create(node):
     print(node)
-    statement = "INSERT INTO tbl_node (prop_id, prop) VALUES "
+    statement = "INSERT INTO tbl_node (prop, schema, prop_id, type, valid) VALUES "
     for node_item in node:
         prop = node_item.get("prop")
+        prop_type = node_item.get("type")
+        schema = node_item.get("schema")
         if prop is None:
             abort(409, f"The node must have a prop key with value of type dict")
         prop_id = prop.get("id")
         if prop_id is None:
             abort(409, f"The prop dict should contain id property of type string")
+        if prop_type is None:
+            abort(409, f"The node must have a type key with value of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
-            statement = statement + f"('{prop_id}', '{json_prop}'), "
+            statement = statement + f"('{json_prop}', '{schema}','{prop_id}', '{prop_type}', TRUE), "
 
     # insert new
     db = Database()
