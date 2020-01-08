@@ -34,7 +34,7 @@ def get_valid_kafka_topic_by_prop_id(prop_id):
     if len(nodes) >= 1:
         return nodes, 200
 
-    abort(404, f"Kafka topic with prop.id {prop_id} not found")
+    abort(404, f"Kafka topic with prop id {prop_id} not found")
 
 
 def get_valid_kafka_topic_field_by_prop_id(prop_id):
@@ -47,4 +47,4 @@ def get_valid_kafka_topic_field_by_prop_id(prop_id):
     if len(nodes) >= 1:
         return nodes, 200
 
-    abort(404, f"Kafka topic field with prop.id {prop_id} not found")
+    abort(404, f"Kafka topic field with prop id {prop_id} not found")
