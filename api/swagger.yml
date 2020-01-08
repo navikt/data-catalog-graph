@@ -235,7 +235,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: id of the term
+          description: id of the table
           type: string
           required: True
       responses:
@@ -260,6 +260,92 @@ paths:
       responses:
         200:
           description: Column found
+          schema:
+            $ref: '#/definitions/Node'
+
+  /kafka/topics:
+    get:
+      operationId: kafka.get_all_valid_kafka_topic
+      tags:
+        - Kafka topics and fields
+      summary: Get all kafka topics
+      description: Get all kafka topics
+      parameters:
+        - name: length
+          in: query
+          type: integer
+          description: Number of term nodes to get from nodes
+          required: false
+        - name: offset
+          in: query
+          type: integer
+          description: Offset from beginning of list where to start gathering nodes
+          required: false
+      responses:
+        200:
+          description: Successfully read kafka topics list operation
+          schema:
+            $ref: '#/definitions/Node'
+
+  /kafka/topic/fields:
+    get:
+      operationId: kafka.get_all_valid_kafka_topic_field
+      tags:
+        - Kafka topics and fields
+      summary: Get all kafka topic fields
+      description: Get all kafka topic fields
+      parameters:
+        - name: length
+          in: query
+          type: integer
+          description: Number of term nodes to get from nodes
+          required: false
+        - name: offset
+          in: query
+          type: integer
+          description: Offset from beginning of list where to start gathering nodes
+          required: false
+      responses:
+        200:
+          description: Successfully read kafka topic fields list operation
+          schema:
+            $ref: '#/definitions/Node'
+
+  /kafka/topic/{id}:
+    get:
+      operationId: kafka.get_valid_kafka_topic_by_prop_id
+      tags:
+        - Kafka topics and fields
+      summary: Get kafka topic by id
+      description: Get kafka topic by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the kafka topic
+          type: string
+          required: True
+      responses:
+        200:
+          description: Kafka topic found
+          schema:
+            $ref: '#/definitions/Node'
+
+  /kafka/topic/field/{id}:
+    get:
+      operationId: kafka.get_valid_kafka_topic_field_by_prop_id
+      tags:
+        - Kafka topics and fields
+      summary: Get kafka topic field by id
+      description: Get kafka topic field by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the kafka topic field
+          type: string
+          required: True
+      responses:
+        200:
+          description: kafka topic field found
           schema:
             $ref: '#/definitions/Node'
 
