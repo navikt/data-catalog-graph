@@ -235,7 +235,7 @@ paths:
       parameters:
         - name: prop_id
           in: path
-          description: id of the table
+          description: Prop id of the table
           type: string
           required: True
       responses:
@@ -254,12 +254,50 @@ paths:
       parameters:
         - name: prop_id
           in: path
-          description: id of the term
+          description: Prop id of the column
           type: string
           required: True
       responses:
         200:
           description: Column found
+          schema:
+            $ref: '#/definitions/Node'
+
+  /table/schema/search/{schema_name}:
+    get:
+      operationId: table.search_valid_tables_by_schema
+      tags:
+        - Tables and columns
+      summary: Get tables by schema name
+      description: Get tables by schema name
+      parameters:
+        - name: schema_name
+          in: path
+          description: Schema name of the table
+          type: string
+          required: True
+      responses:
+        200:
+          description: Tables found
+          schema:
+            $ref: '#/definitions/Node'
+
+  /table/column/schema/search/{schema_name}:
+    get:
+      operationId: table.search_valid_columns_by_schema
+      tags:
+        - Tables and columns
+      summary: Get columns by schema name
+      description: Get columns by schema name
+      parameters:
+        - name: schema_name
+          in: path
+          description: Schema name of the column
+          type: string
+          required: True
+      responses:
+        200:
+          description: Columns found
           schema:
             $ref: '#/definitions/Node'
 
@@ -321,7 +359,7 @@ paths:
       parameters:
         - name: prop_id
           in: path
-          description: id of the kafka topic
+          description: Prop id of the kafka topic
           type: string
           required: True
       responses:
@@ -340,7 +378,7 @@ paths:
       parameters:
         - name: prop_id
           in: path
-          description: id of the kafka topic field
+          description: Prop id of the kafka topic field
           type: string
           required: True
       responses:

@@ -26,7 +26,8 @@ def get_all_valid_columns():
 
 def get_valid_table_by_prop_id(prop_id):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'db_table' AND prop->>'id' ='{prop_id}'"
+    statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'db_table' 
+                    AND prop->>'id' =' {prop_id}'"""
     print(statement)
     nodes = db.execute(statement)
 
@@ -38,7 +39,8 @@ def get_valid_table_by_prop_id(prop_id):
 
 def get_valid_column_by_prop_id(prop_id):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'db_table_column' AND prop->>'id' ='{prop_id}'"
+    statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'db_table_column' 
+                    AND prop->>'id' = '{prop_id}'"""
     print(statement)
     nodes = db.execute(statement)
 
@@ -46,3 +48,29 @@ def get_valid_column_by_prop_id(prop_id):
         return nodes, 200
 
     abort(404, f"Column with prop.id {id} not found")
+
+
+def search_valid_tables_by_schema(schema_name):
+    db = Database()
+    statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'db_table' 
+                    AND prop->>'schema_name' ILIKE '{schema_name}'"""
+    print(statement)
+    nodes = db.execute(statement)
+
+    if nodes is not None:
+        return nodes, 200
+
+    abort(404, f"Table with schema name.id {id} not found")
+
+
+def search_valid_columns_by_schema(schema_name):
+    db = Database()
+    statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'db_table_column' 
+                    AND prop->>'schema_name' ILIKE '{schema_name}'"""
+    print(statement)
+    nodes = db.execute(statement)
+
+    if nodes is not None:
+        return nodes, 200
+
+    abort(404, f"Column with schema name.id {id} not found")
