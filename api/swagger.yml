@@ -177,6 +177,92 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
+  /tables:
+    get:
+      operationId: table.get_all_valid_tables
+      tags:
+        - Tables and columns
+      summary: Get all tables
+      description: Get all tables
+      parameters:
+        - name: length
+          in: query
+          type: integer
+          description: Number of term nodes to get from nodes
+          required: false
+        - name: offset
+          in: query
+          type: integer
+          description: Offset from beginning of list where to start gathering nodes
+          required: false
+      responses:
+        200:
+          description: Successfully read tables list operation
+          schema:
+            $ref: '#/definitions/Node'
+
+  /tables/columns:
+    get:
+      operationId: table.get_all_valid_columns
+      tags:
+        - Tables and columns
+      summary: Get all columns
+      description: Get all columns
+      parameters:
+        - name: length
+          in: query
+          type: integer
+          description: Number of term nodes to get from nodes
+          required: false
+        - name: offset
+          in: query
+          type: integer
+          description: Offset from beginning of list where to start gathering nodes
+          required: false
+      responses:
+        200:
+          description: Successfully read columns list operation
+          schema:
+            $ref: '#/definitions/Node'
+
+  /table/prop/{id}:
+    get:
+      operationId: table.get_valid_table_by_prop_id
+      tags:
+        - Tables and columns
+      summary: Get table by id
+      description: Get table by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the term
+          type: string
+          required: True
+      responses:
+        200:
+          description: Table found
+          schema:
+            $ref: '#/definitions/Node'
+
+  /table/column/prop/{id}:
+    get:
+      operationId: table.get_valid_column_by_prop_id
+      tags:
+        - Tables and columns
+      summary: Get column by id
+      description: Get column by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the term
+          type: string
+          required: True
+      responses:
+        200:
+          description: Column found
+          schema:
+            $ref: '#/definitions/Node'
+
   /concepts:
     get:
       operationId: concept.read_all
