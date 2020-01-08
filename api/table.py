@@ -27,14 +27,14 @@ def get_all_valid_columns():
 def get_valid_table_by_prop_id(prop_id):
     db = Database()
     statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'db_table' 
-                    AND prop->>'id' =' {prop_id}'"""
+                    AND prop->>'id' = '{prop_id}'"""
     print(statement)
     nodes = db.execute(statement)
 
     if len(nodes) >= 1:
         return nodes, 200
 
-    abort(404, f"Table with prop.id {prop_id} not found")
+    abort(404, f"Table with prop id {prop_id} not found")
 
 
 def get_valid_column_by_prop_id(prop_id):
@@ -47,7 +47,7 @@ def get_valid_column_by_prop_id(prop_id):
     if len(nodes) >= 1:
         return nodes, 200
 
-    abort(404, f"Column with prop.id {prop_id} not found")
+    abort(404, f"Column with prop id {prop_id} not found")
 
 
 def search_valid_tables_by_schema(schema_name):
@@ -60,7 +60,7 @@ def search_valid_tables_by_schema(schema_name):
     if len(nodes) >= 1:
         return nodes, 200
 
-    abort(404, f"Table with schema name.id {schema_name} not found")
+    abort(404, f"Table with schema name {schema_name} not found")
 
 
 def search_valid_columns_by_schema(schema_name):
@@ -73,4 +73,4 @@ def search_valid_columns_by_schema(schema_name):
     if len(nodes) >= 1:
         return nodes, 200
 
-    abort(404, f"Column with schema name.id {schema_name} not found")
+    abort(404, f"Column with schema name {schema_name} not found")
