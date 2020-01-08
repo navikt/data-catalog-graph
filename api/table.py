@@ -44,7 +44,7 @@ def get_valid_column_by_prop_id(prop_id):
     print(statement)
     nodes = db.execute(statement)
 
-    if nodes is not None:
+    if len(nodes) >= 1:
         return nodes, 200
 
     abort(404, f"Column with prop.id {prop_id} not found")
