@@ -225,7 +225,7 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /table/prop/{prop_id}:
+  /table/{prop_id}:
     get:
       operationId: table.get_valid_table_by_prop_id
       tags:
@@ -244,7 +244,7 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /table/column/prop/{prop_id}:
+  /table/column/{prop_id}:
     get:
       operationId: table.get_valid_column_by_prop_id
       tags:
