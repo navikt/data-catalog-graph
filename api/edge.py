@@ -32,8 +32,8 @@ def update(edges):
             abort(409, f"The edge must have a prop with value of type dict")
         else:
             json_prop = prop.replace("\'", "''")
-            statement = statement + f""" ((SELECT id FROM tbl_node WHERE prop->>'id' = '{n1}'), 
-                                        (SELECT id FROM tbl_node WHERE prop->>'id' = '{n2}'), 
+            statement = statement + f""" ((SELECT id FROM tbl_node WHERE valid = TRUE AND prop->>'id' = '{n1}'), 
+                                        (SELECT id FROM tbl_node WHERE valid = TRUE AND prop->>'id' = '{n2}'), 
                                         '{json_prop}'::jsonb),"""
 
     # insert new
@@ -65,7 +65,7 @@ def get_all_edges_of_source_node(node_id):
 
     statement = f"""SELECT n.*, e.n1 source_node, e.n2 target_node, e.prop edge_prop, e.created edge_created 
                     FROM tbl_node n, tbl_edge e 
-                    WHERE n.id = e.n2 AND n.id IN (SELECT n2 FROM tbl_edge WHERE n1 = {node_id});"""
+                    WHERE n.id = e.n2 AND n.valid = TRUE AND n.id IN (SELECT n2 FROM tbl_edge WHERE n1 = {node_id});"""
     edges = db.execute(statement)
 
     if edges is not None:
