@@ -10,7 +10,7 @@ spec:
   port: 5000
   replicas:
     min: 2
-    max: 2
+    max: 4
     cpuThresholdPercentage: 70
   liveness:
     path: /isAlive

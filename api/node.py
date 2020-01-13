@@ -120,7 +120,9 @@ def create(node):
 
 def update(node):
     print("put:", node)
-    update_statement = "UPDATE tbl_node SET valid_to = now(), valid = FALSE WHERE valid_to IS Null AND prop->>'id' IN ("
+    statement = "WITH previous_valid AS (SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'id' IN ("
+    update_statement = "update_previous_valid AS (UPDATE tbl_node SET valid_to = now(), valid = FALSE " \
+                       "WHERE valid_to IS Null AND id IN (SELECT id from previous_valid))"
     create_statement = "INSERT INTO tbl_node (prop, valid) VALUES"
     for node_item in node:
         prop = node_item.get("prop")
@@ -134,23 +136,21 @@ def update(node):
             abort(409, f"The prop dict should contain type property of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
-            update_statement = update_statement + f" '{prop_id}',"
-            create_statement = create_statement + f"""(COALESCE((SELECT prop FROM tbl_node WHERE prop->>'id' = 
-                                                '{prop_id}' AND valid = FALSE ORDER BY valid_to DESC LIMIT 1)::jsonb, 
-                                                """ + "'{}'::jsonb) ||" + f" '{json_prop}'::jsonb, TRUE),"
+            statement = statement + f" '{prop_id}',"
+            create_statement = create_statement + f"""(COALESCE((SELECT prop FROM previous_valid WHERE prop->>'id' = 
+                                                '{prop_id}')::jsonb, """ + "'{}'::jsonb) ||" \
+                                                + f" '{json_prop}'::jsonb, TRUE),"
 
     # insert new
     db = Database()
     # Deleting the space and ',' at the end of each statement
-    update_statement = update_statement[:-1]
-    update_statement = update_statement + ");"
+    statement = statement[:-1]
+    statement = statement + "),"
     create_statement = create_statement[:-1]
-    print(update_statement)
-    print(create_statement)
-    # Updating valid state of previous nodes to false with the provided prop ids
-    db.execute(update_statement)
+    statement = statement + update_statement + create_statement
+    print(statement)
     # Creating new nodes with valid states
-    node = db.execute(create_statement)
+    node = db.execute(statement)
     return f"Successfully updated {node} rows", 200
 
 
