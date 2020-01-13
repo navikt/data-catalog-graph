@@ -135,7 +135,7 @@ def update(node):
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
             update_statement = update_statement + f" '{prop_id}',"
-            create_statement = create_statement + f""" ((SELECT prop FROM tbl_node WHERE prop->>'id' = {prop_id} 
+            create_statement = create_statement + f""" ((SELECT prop FROM tbl_node WHERE prop->>'id' = '{prop_id}' 
                                                          AND valid = FALSE ORDER BY valid_to DESC LIMIT 1) 
                                                          || '{json_prop}'::jsonb, TRUE),"""
 
