@@ -145,7 +145,7 @@ def update(node):
     db = Database()
     # Deleting the space and ',' at the end of each statement
     statement = statement[:-1]
-    statement = statement + "),"
+    statement = statement + ")),"
     create_statement = create_statement[:-1]
     statement = statement + update_statement + create_statement
     print(statement)
