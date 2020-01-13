@@ -5,7 +5,8 @@ import re
 
 def get_all():
     db = Database()
-    statement = "SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'term'"
+    statement = "SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'term' " \
+                "AND prop->>'status' ILIKE 'godkjent%'"
     nodes = db.execute(statement)
 
     if nodes is not None:
