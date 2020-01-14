@@ -507,11 +507,11 @@ paths:
 
   /nodes/prop:
     put:
-      operationId: node.update_prop
+      operationId: node.replace_prop
       tags:
         - Nodes
-      summary: Update a node with a new prop
-      description: Update a node with a new prop
+      summary: Replace a list of node with a new prop
+      description: Replace a list of a node with a new prop
       parameters:
         - name: node
           in: body

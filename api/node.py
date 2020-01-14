@@ -166,7 +166,7 @@ merging the previous prop with the new prop.
 """
 
 
-def update_prop(node):
+def replace_prop(node):
     print("put:", node)
     statement = "WITH update_previous_valid AS (UPDATE tbl_node SET valid_to = now(), valid = FALSE " \
                 "WHERE valid_to IS Null AND id IN ("
