@@ -505,6 +505,30 @@ paths:
         200:
           description: Successfully updated node
 
+  /nodes/prop:
+    put:
+      operationId: node.update_prop
+      tags:
+        - Nodes
+      summary: Update a node with a new prop
+      description: Update a node with a new prop
+      parameters:
+        - name: node
+          in: body
+          description: Node to create
+          required: True
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                prop:
+                  type: object
+                  description: Node properties
+      responses:
+        200:
+          description: Successfully updated node
+
   /nodes/valid:
     get:
       operationId: node.get_all_valid

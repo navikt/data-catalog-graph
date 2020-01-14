@@ -118,6 +118,12 @@ def create(node):
     return f" Successfully created {node} rows", 200
 
 
+"""
+Method for invalidating the previous node with the same prop id, and inserting a new node while
+merging the previous prop with the new prop.
+"""
+
+
 def update(node):
     print("put:", node)
     statement = "WITH previous_valid AS (SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'id' IN ("
@@ -148,6 +154,45 @@ def update(node):
     statement = statement + ")),"
     create_statement = create_statement[:-1]
     statement = statement + update_statement + create_statement
+    print(statement)
+    # Creating new nodes with valid states
+    node = db.execute(statement)
+    return f"Successfully updated {node} rows", 200
+
+
+"""
+Method for invalidating the previous node with the same prop id, and inserting a new node without
+merging the previous prop with the new prop.
+"""
+
+
+def update_prop(node):
+    print("put:", node)
+    statement = "WITH update_previous_valid AS (UPDATE tbl_node SET valid_to = now(), valid = FALSE " \
+                "WHERE valid_to IS Null AND id IN ("
+    create_statement = "INSERT INTO tbl_node (prop, valid) VALUES"
+    for node_item in node:
+        prop = node_item.get("prop")
+        if prop is None:
+            abort(409, f"The node must have a prop key with value of type dict")
+        prop_id = prop.get("id")
+        if prop_id is None:
+            abort(409, f"The prop dict should contain id property of type string")
+        prop_type = prop.get("type")
+        if prop_type is None:
+            abort(409, f"The prop dict should contain type property of type string")
+        else:
+            json_prop = json.dumps(prop).replace("\'", "''")
+            statement = statement + f" '{prop_id}',"
+            create_statement = create_statement + f"('{json_prop}', TRUE),"
+
+    # insert new
+    db = Database()
+    # Deleting the space and ',' at the end of each statement
+    statement = statement[:-1]
+    statement = statement + ")),"
+    create_statement = create_statement[:-1]
+    statement = statement + create_statement
     print(statement)
     # Creating new nodes with valid states
     node = db.execute(statement)
