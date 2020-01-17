@@ -24,6 +24,8 @@ def get_valid_node_by_prop_id(id):
     if nodes is not None:
         for term in nodes:
             description = re.sub(pattern, r'\1', term['prop']['definisjon'])
+            term.update({'node_id': term['id']})
+            term.update({'id': term['prop']['id']})
             term.update({'term': term['prop']['term']})
             term.update({'description': description})
             term.update({'status': term['prop']['status']})
@@ -44,6 +46,8 @@ def search_term_by_name(term_name, term_status='godkjent'):
     if nodes is not None:
         for term in nodes:
             description = re.sub(pattern, r'\1', term['prop']['definisjon'])
+            term.update({'node_id': term['id']})
+            term.update({'id': term['prop']['id']})
             term.update({'term': term['prop']['term']})
             term.update({'description': description})
             term.update({'status': term['prop']['status']})
