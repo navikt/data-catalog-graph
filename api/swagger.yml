@@ -602,7 +602,7 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /node/search/{id_pattern}:
+  /node/search/{type}:
     get:
       operationId: node.get_all_nodes_by_type
       tags:
@@ -610,7 +610,7 @@ paths:
       summary: Get nodes by prop_id start pattern
       description: Get nodes by prop_id start pattern
       parameters:
-        - name: id_pattern
+        - name: type
           in: path
           description: pattern for id of the node
           type: string
@@ -621,7 +621,7 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /node/valid/search/{id_pattern}:
+  /node/valid/search/{type}:
     get:
       operationId: node.get_all_valid_nodes_by_type
       tags:
@@ -629,7 +629,7 @@ paths:
       summary: Get nodes by prop_id start pattern
       description: Get nodes by prop_id start pattern
       parameters:
-        - name: id_pattern
+        - name: type
           in: path
           description: pattern for id of the node
           type: string
