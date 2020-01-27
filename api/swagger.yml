@@ -225,6 +225,25 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
+  /table/columns/{prop_id}:
+    get:
+      operationId: table.get_all_valid_table_columns
+      tags:
+        - Tables and columns
+      summary: Get all table columns by prop id of table
+      description: Get all table columns by prop id of table
+      parameters:
+        - name: prop_id
+          in: path
+          description: Prop id of the table
+          type: string
+          required: True
+      responses:
+        200:
+          description: Columns found
+          schema:
+            $ref: '#/definitions/Node'
+
   /table/{prop_id}:
     get:
       operationId: table.get_valid_table_by_prop_id
