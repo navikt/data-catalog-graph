@@ -224,6 +224,26 @@ paths:
           description: Successfully read columns list operation
           schema:
             $ref: '#/definitions/Node'
+  /table:
+    put:
+      operationId: table.update_table
+      tags:
+        - Tables and columns
+      summary: Update a table
+      description: Update a table
+      parameters:
+        - name: table
+          in: body
+          description: prop of table
+          required: True
+          schema:
+            type: object
+            properties:
+              prop:
+                type: object
+      responses:
+        201:
+          description: Successfully updated table
 
   /table/columns/{prop_id}:
     get:
