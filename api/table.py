@@ -92,8 +92,10 @@ def search_valid_columns_by_schema(schema_name):
     abort(404, f"Column with schema name {schema_name} not found")
 
 
-def update_table(prop):
+def update_table(table):
     db = Database()
+    prop = table.get("prop")
+
     if prop is None:
         abort(409, "The node must have a value of type dict")
     prop_id = prop.get("id")
