@@ -1,3 +1,4 @@
+import json
 from flask import abort
 from database import Database
 
@@ -89,3 +90,21 @@ def search_valid_columns_by_schema(schema_name):
         return nodes, 200
 
     abort(404, f"Column with schema name {schema_name} not found")
+
+
+def update_table(prop):
+    db = Database()
+    if prop is None:
+        abort(409, "The node must have a value of type dict")
+    prop_id = prop.get("id")
+    if prop_id is None:
+        abort(409, "The prop dict should contain id property of type string")
+    prop_type = prop.get("type")
+    if prop_type is None:
+        abort(409, "The prop dict should contain type property of type string")
+
+    json_prop = json.dumps(prop).replace("\'", "''")
+    statement = f"""UPDATE tbl_node SET prop = '{json_prop}' WHERE prop->>'id' = '{prop_id}' AND valid = TRUE"""
+    print(statement)
+    node = db.execute(statement)
+    return f"Successfully updated {node} rows", 200
