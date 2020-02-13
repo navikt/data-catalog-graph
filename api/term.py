@@ -40,7 +40,7 @@ def search_term_by_name(term_name, term_status='godkjent'):
 
     statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'term' AND 
                   (prop->>'term' ILIKE '%{term_name}%' OR prop->>'definisjon' ILIKE '%{term_name}%') AND 
-                  prop->>'status' ILIKE '{term_status}%' """
+                  prop->>'status' ILIKE '%{term_status}%' """
     nodes = db.execute(statement)
     pattern = '\[([^|]+)\|([A-Z]{1,10}-\d+)\]'
     if nodes is not None:
