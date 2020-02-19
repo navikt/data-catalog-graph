@@ -340,7 +340,7 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /kafka/topics:
+  /kafka:
     get:
       operationId: kafka.get_all_valid_kafka_topic
       tags:
@@ -364,7 +364,7 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /kafka/topic/fields:
+  /kafka/fields:
     get:
       operationId: kafka.get_all_valid_kafka_topic_field
       tags:
@@ -388,7 +388,7 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /kafka/topic/{prop_id}:
+  /kafka/{prop_id}:
     get:
       operationId: kafka.get_valid_kafka_topic_by_prop_id
       tags:
@@ -407,7 +407,7 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /kafka/topic/field/{prop_id}:
+  /kafka/field/{prop_id}:
     get:
       operationId: kafka.get_valid_kafka_topic_field_by_prop_id
       tags:
