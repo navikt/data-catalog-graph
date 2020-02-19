@@ -426,6 +426,25 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
+  /kafka/topicfields/{prop_id}:
+    get:
+      operationId: kafka.get_all_valid_kafka_topic_fields
+      tags:
+      - Kafka topics and fields
+      summary: Get all fields for a kafka topic by topic id
+      description: Get all fields for a kafka topic by topic id
+      parameters:
+      - name: prop_id
+        in: path
+        description: Prop id of the kafka topic
+        type: string
+        required: True
+      responses:
+        200:
+          description: Fields found for kafka topic
+          schema:
+            $ref: '#/definitions/Node'
+
   /concepts:
     get:
       operationId: concept.read_all
