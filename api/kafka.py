@@ -6,8 +6,9 @@ def get_all_valid_kafka_topic_fields(prop_id):
     db = Database()
     statement = f"""SELECT n.*, e.n1 source_node, e.n2 target_node, e.prop edge_prop, e.created edge_created 
                     FROM tbl_node n, tbl_edge e 
-                    WHERE n.id = e.n2 AND n.valid = TRUE AND prop->>'type' = 'kafka_topic_field'
-                    AND n.id IN (SELECT n2 FROM tbl_edge WHERE  n1 = '{prop_id}')
+                    WHERE n.id = e.n2 AND n.valid = TRUE AND n.prop->>'type' = 'kafka_topic_field'
+                    AND n.id IN (SELECT n2 FROM tbl_edge WHERE  n1 =
+                    (SELECT id FROM tbl_node WHERE valid = TRUE AND prop->>'id'='{prop_id}'))
                     ORDER BY n.prop->>'field_name' ;"""
     nodes = db.execute(statement)
 
