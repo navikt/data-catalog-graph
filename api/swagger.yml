@@ -547,7 +547,7 @@ paths:
     put:
       operationId: node.update_node
       tags:
-        - Tables and columns
+        - Nodes
       summary: Update a node
       description: Update a node
       parameters:
