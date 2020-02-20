@@ -115,8 +115,15 @@ def update_table(table):
 def get_columns_by_tag(tag_list):
     db = Database()
     statement = "SELECT DISTINCT * FROM tbl_node, jsonb_array_elements(prop->'column_tags') obj WHERE valid = TRUE  " \
-                "AND obj->>'name' ILIKE ANY(ARRAY['%test%','%arbeid%'])"
+                "AND obj->>'name' ILIKE ANY(ARRAY["
     for tag in tag_list:
-        tag_name = tag.get("name")
-        if tag_name is None:
-            abort(409, f"The node must have a prop key with value of type dict")
+        statement = statement + f" '%{tag}%',"
+
+    statement = statement[:-1]
+    statement = statement + "])"
+    print(statement)
+    nodes = db.execute(statement)
+    if len(nodes) >= 1:
+        return nodes, 200
+
+    abort(404, f"No columns found with tags {tag_list}")
