@@ -110,3 +110,20 @@ def update_table(table):
     print(statement)
     node = db.execute(statement)
     return f"Successfully updated {node} rows", 200
+
+
+def get_columns_by_tag(tag_list):
+    db = Database()
+    statement = "SELECT DISTINCT * FROM tbl_node, jsonb_array_elements(prop->'column_tags') obj WHERE valid = TRUE  " \
+                "AND obj->>'name' ILIKE ANY(ARRAY["
+    for tag in tag_list:
+        statement = statement + f" '%{tag}%',"
+
+    statement = statement[:-1]
+    statement = statement + "])"
+    print(statement)
+    nodes = db.execute(statement)
+    if len(nodes) >= 1:
+        return nodes, 200
+
+    abort(404, f"No columns found with tags {tag_list}")
