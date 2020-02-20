@@ -226,7 +226,7 @@ paths:
             $ref: '#/definitions/Node'
   /table:
     put:
-      operationId: table.update_table
+      operationId: node.update_node
       tags:
         - Tables and columns
       summary: Update a table
@@ -363,6 +363,25 @@ paths:
           description: Successfully read kafka topics list operation
           schema:
             $ref: '#/definitions/Node'
+    put:
+      operationId: node.update_node
+      tags:
+      - Tables and columns
+      summary: Update kafka node
+      description: Update kafka node
+      parameters:
+      - name: table
+        in: body
+        description: prop of kafka node
+        required: True
+        schema:
+          type: object
+          properties:
+            prop:
+              type: object
+      responses:
+        201:
+          description: Successfully updated kafka node
 
   /kafka/fields:
     get:
@@ -541,11 +560,11 @@ paths:
           description: Successfully created new node
     
     put:
-      operationId: node.update
+      operationId: node.upsert_node
       tags:
         - Nodes
-      summary: Update a node
-      description: Update a node
+      summary: Upsert a node
+      description: Upsert a node
       parameters:
         - name: node
           in: body
