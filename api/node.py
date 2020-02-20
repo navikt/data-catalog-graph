@@ -118,7 +118,7 @@ def create(node):
     return f" Successfully created {node} rows", 200
 
 
-def update(node):
+def upsert_node(node):
     print("put:", node)
     statement = "WITH previous_valid AS (SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'id' IN ("
     update_statement = "update_previous_valid AS (UPDATE tbl_node SET valid_to = now(), valid = FALSE " \
@@ -172,3 +172,23 @@ def delete(prop_id):
         statement = f"DELETE FROM tbl_node WHERE prop->>'id' = '{prop_id}'"
         db.execute(statement)
         return f"Node with prop id = {prop_id} deleted", 200
+
+
+def update_node(node):
+    db = Database()
+    prop = node.get("prop")
+
+    if prop is None:
+        abort(409, "The node must have a value of type dict")
+    prop_id = prop.get("id")
+    if prop_id is None:
+        abort(409, "The prop dict should contain id property of type string")
+    prop_type = prop.get("type")
+    if prop_type is None:
+        abort(409, "The prop dict should contain type property of type string")
+
+    json_prop = json.dumps(prop).replace("\'", "''")
+    statement = f"""UPDATE tbl_node SET prop = '{json_prop}' WHERE prop->>'id' = '{prop_id}' AND valid = TRUE"""
+    print(statement)
+    node = db.execute(statement)
+    return f"Successfully updated {node} rows", 200
