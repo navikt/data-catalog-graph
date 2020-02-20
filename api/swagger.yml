@@ -543,27 +543,6 @@ paths:
         200:
           description: Successfully updated node
 
-  /node:
-    put:
-      operationId: node.update_node
-      tags:
-        - Nodes
-      summary: Update a node
-      description: Update a node
-      parameters:
-        - name: node
-          in: body
-          description: prop of node
-          required: True
-          schema:
-            type: object
-            properties:
-              prop:
-                type: object
-      responses:
-        202:
-          description: Successfully updated node
-
   /nodes/valid:
     get:
       operationId: node.get_all_valid
@@ -587,6 +566,27 @@ paths:
           description: Successfully read nodes list operation
           schema:
             $ref: '#/definitions/Node'
+
+  /node:
+    put:
+      operationId: node.update_node
+      tags:
+        - Nodes
+      summary: Update a node
+      description: Update a node
+      parameters:
+        - name: node
+          in: body
+          description: prop of node
+          required: True
+          schema:
+            type: object
+            properties:
+              prop:
+                type: object
+      responses:
+        202:
+          description: Successfully updated node
 
   /node/{prop_id}:
     delete:
