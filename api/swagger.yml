@@ -224,26 +224,6 @@ paths:
           description: Successfully read columns list operation
           schema:
             $ref: '#/definitions/Node'
-  /table:
-    put:
-      operationId: node.update_node
-      tags:
-        - Tables and columns
-      summary: Update a table
-      description: Update a table
-      parameters:
-        - name: table
-          in: body
-          description: prop of table
-          required: True
-          schema:
-            type: object
-            properties:
-              prop:
-                type: object
-      responses:
-        201:
-          description: Successfully updated table
 
   /table/columns/{prop_id}:
     get:
@@ -363,25 +343,6 @@ paths:
           description: Successfully read kafka topics list operation
           schema:
             $ref: '#/definitions/Node'
-    put:
-      operationId: node.update_node
-      tags:
-      - Tables and columns
-      summary: Update kafka node
-      description: Update kafka node
-      parameters:
-      - name: table
-        in: body
-        description: prop of kafka node
-        required: True
-        schema:
-          type: object
-          properties:
-            prop:
-              type: object
-      responses:
-        201:
-          description: Successfully updated kafka node
 
   /kafka/fields:
     get:
@@ -580,6 +541,27 @@ paths:
                   description: Node properties
       responses:
         200:
+          description: Successfully updated node
+
+  /node:
+    put:
+      operationId: node.update_node
+      tags:
+        - Tables and columns
+      summary: Update a node
+      description: Update a node
+      parameters:
+        - name: node
+          in: body
+          description: prop of node
+          required: True
+          schema:
+            type: object
+            properties:
+              prop:
+                type: object
+      responses:
+        202:
           description: Successfully updated node
 
   /nodes/valid:
