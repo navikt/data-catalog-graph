@@ -19,7 +19,7 @@ def get_all():
 
 def update(edges):
     print("put:", edges)
-    statement = "WITH valid_nodes as (SELECT * from tbl_node WHERE valid = TRUE ) " \
+    statement = "WITH valid_nodes as (SELECT id, prop->>'id' as prop_id from tbl_node WHERE valid = TRUE ) " \
                 "INSERT INTO tbl_edge (n1, n2, prop) VALUES"
     for edge in edges:
         n1 = edge.get("n1")
@@ -33,8 +33,8 @@ def update(edges):
             abort(409, f"The edge must have a prop with value of type dict")
         else:
             json_prop = prop.replace("\'", "''")
-            statement = statement + f""" ((SELECT id FROM valid_nodes WHERE prop->>'id' = '{n1}'), 
-                                        (SELECT id FROM valid_nodes WHERE prop->>'id' = '{n2}'), 
+            statement = statement + f""" ((SELECT id FROM valid_nodes WHERE prop_id = '{n1}'), 
+                                        (SELECT id FROM valid_nodes WHERE prop_id = '{n2}'), 
                                         '{json_prop}'::jsonb),"""
 
     # insert new
