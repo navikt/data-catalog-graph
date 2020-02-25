@@ -567,6 +567,27 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
+  /node:
+    put:
+      operationId: node.update_node
+      tags:
+        - Nodes
+      summary: Update a node
+      description: Update a node
+      parameters:
+        - name: node
+          in: body
+          description: prop of node
+          required: True
+          schema:
+            type: object
+            properties:
+              prop:
+                type: object
+      responses:
+        202:
+          description: Successfully updated node
+
   /node/comment:
     delete:
       operationId: node.delete_node_comment
