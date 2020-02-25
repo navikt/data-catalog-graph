@@ -188,7 +188,7 @@ def update_node(node):
         abort(409, "The prop dict should contain type property of type string")
 
     json_prop = json.dumps(prop).replace("\'", "''")
-    statement = f"""UPDATE tbl_node SET prop = '{json_prop}' WHERE prop->>'id' = '{prop_id} AND valid = TRUE'"""
+    statement = f"""UPDATE tbl_node SET prop = '{json_prop}' WHERE prop->>'id' = '{prop_id}' AND valid = TRUE """
     print(statement)
     node = db.execute(statement)
     return f"Successfully update {node} rows.", 200
