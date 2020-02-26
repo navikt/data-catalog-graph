@@ -596,17 +596,16 @@ paths:
       summary: Delete a comment
       description: Delete a comment
       parameters:
-        - name: comment
-          in: body
-          description: comment in node
-          required: True
-          schema:
-            type: object
-            properties:
-              id:
-                type: string
-              node_id:
-                type: integer
+        - name: commend_id
+          in: query
+          type: string
+          description: target comment
+          required: true
+        - name: node_id
+          in: query
+          type: integer
+          description: target node
+          required: true
       responses:
         202:
           description: Successfully deleted comment
