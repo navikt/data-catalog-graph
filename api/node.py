@@ -220,13 +220,11 @@ def add_node_comment(node):
     return f" comment id = {comment_id} deleted", 200
 
 
-def delete_node_comment(comment):
-    comment_id = comment.get("id")
+def delete_node_comment(comment_id, node_id):
     if comment_id is None:
-        abort(409,  "The comment dict should contain id property of type string")
-    node_id = comment.get("node_id")
+        abort(409,  "The query should contain comment id property of type string")
     if node_id is None:
-        abort(409,  "The comment dict should contain a node_id property of type integer")
+        abort(409,  "The query should contain a node id property of type integer")
     print("delete comment:", comment_id)
 
     db = Database()
