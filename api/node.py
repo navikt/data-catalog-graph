@@ -174,65 +174,43 @@ def delete(prop_id):
         return f"Node with prop id = {prop_id} deleted", 200
 
 
-def update_node(node):
-    db = Database()
-    prop = node.get("prop")
-
-    if prop is None:
-        abort(409, "The node must have a prop property of type dict")
-    prop_id = prop.get("id")
-    if prop_id is None:
-        abort(409, "The prop dict should contain id property of type string")
-    prop_type = prop.get("type")
-    if prop_type is None:
-        abort(409, "The prop dict should contain type property of type string")
-
-    json_prop = json.dumps(prop).replace("\'", "''")
-    statement = f"""UPDATE tbl_node SET prop = '{json_prop}' WHERE prop->>'id' = '{prop_id}' AND valid = TRUE """
-    print(statement)
-    node = db.execute(statement)
-    return f"Successfully update {node} rows.", 200
-
-
 def add_node_comment(node):
 
-    node_id = node.get("node_id")
+    node_id = node.get("nodeId")
     if node_id is None:
-        abort(409,  "The comment dict should contain a node_id property of type integer")
-    comment = node.get("comment")
+        abort(409,  "The node should contain a node Id property of type integer")
+    comment = node.get("commentBody")
     if comment is None:
-        abort(409,  "The node dict should contain comment property of type dict")
+        abort(409,  "The node should contain comment property of type dict")
     comment_id = comment.get("id")
     if comment_id is None:
         abort(409,  "The comment dict should contain id property of type string")
-    comment_id = comment.get("name")
-    if comment_id is None:
-        abort(409, "The comment dict should contain name property of type string")
+    comment_author = comment.get("author")
+    if comment_author is None:
+        abort(409, "The comment dict should contain author property of type string")
 
     db = Database()
-    statement = f"""WITH new_comment_list AS (SELECT list FROM tbl_node n, jsonb_array_elements(prop->'comments') list
-                    WHERE n.id = {node_id} AND list->>'id' NOT IN ('{comment_id}')), 
-                    update_node AS (UPDATE tbl_node SET prop = prop::jsonb - 'comments' WHERE id = {node_id})
-                    UPDATE tbl_node SET prop = prop::jsonb || (SELECT jsonb_build_object('comments', 
-                    json_agg(list)::jsonb) FROM new_comment_list) WHERE id = {node_id}"""
-
-    db.execute(statement)
-    return f" comment id = {comment_id} deleted", 200
+    json_comment = json.dumps(comment).replace("\'", "''")
+    statement = "UPDATE tbl_node SET prop = jsonb_insert(prop, '{comments, 0}',"
+    statement = statement + f"""'{json_comment}'::jsonb) WHERE id = {node_id}"""
+    print(statement)
+    response = db.execute(statement)
+    return f" Successfully added {response} comment ", 200
 
 
-def delete_node_comment(comment_id, node_id):
-    if comment_id is None:
+def delete_node_comment(commentId, nodeId):
+    if commentId is None:
         abort(409,  "The query should contain comment id property of type string")
-    if node_id is None:
+    if nodeId is None:
         abort(409,  "The query should contain a node id property of type integer")
-    print("delete comment:", comment_id)
+    print("delete comment:", commentId)
 
     db = Database()
     statement = f"""WITH new_comment_list AS (SELECT list FROM tbl_node n, jsonb_array_elements(prop->'comments') list
-                    WHERE n.id = {node_id} AND list->>'id' NOT IN ('{comment_id}')), 
-                    update_node AS (UPDATE tbl_node SET prop = prop::jsonb - 'comments' WHERE id = {node_id})
+                    WHERE n.id = {nodeId} AND list->>'id' NOT IN ('{commentId}')), 
+                    update_node AS (UPDATE tbl_node SET prop = prop::jsonb - 'comments' WHERE id = {nodeId})
                     UPDATE tbl_node SET prop = prop::jsonb || (SELECT jsonb_build_object('comments', 
-                    json_agg(list)::jsonb) FROM new_comment_list) WHERE id = {node_id}"""
-
+                    json_agg(list)::jsonb) FROM new_comment_list) WHERE id = {nodeId}"""
+    print(statement)
     db.execute(statement)
-    return f" comment id = {comment_id} deleted", 200
+    return f" comment id = {commentId} deleted", 200

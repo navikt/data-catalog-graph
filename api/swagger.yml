@@ -567,28 +567,29 @@ paths:
           schema:
             $ref: '#/definitions/Node'
 
-  /node:
+  /node/comment:
     put:
-      operationId: node.update_node
+      operationId: node.add_node_comment
       tags:
         - Nodes
-      summary: Update a node
-      description: Update a node
+      summary: Add a comment
+      description: Add a comment
       parameters:
         - name: node
           in: body
-          description: prop of node
+          description: comment payload
           required: True
           schema:
             type: object
             properties:
-              prop:
+              nodeId:
+                type: integer
+              commentBody:
                 type: object
       responses:
         202:
-          description: Successfully updated node
+          description: Successfully added a comment
 
-  /node/comment:
     delete:
       operationId: node.delete_node_comment
       tags:
@@ -596,12 +597,12 @@ paths:
       summary: Delete a comment
       description: Delete a comment
       parameters:
-        - name: comment_id
+        - name: commentId
           in: query
           type: string
           description: target comment
           required: true
-        - name: node_id
+        - name: nodeId
           in: query
           type: integer
           description: target node
