@@ -193,6 +193,7 @@ def add_node_comment(node):
     json_comment = json.dumps(comment).replace("\'", "''")
     statement = "UPDATE tbl_node SET prop = jsonb_insert(prop, '{comments, 0}',"
     statement = statement + f"""'{json_comment}'::jsonb) WHERE id = {node_id}"""
+    print(statement)
     response = db.execute(statement)
     return f" Successfully added {response} comment ", 200
 
@@ -210,6 +211,6 @@ def delete_node_comment(commentId, nodeId):
                     update_node AS (UPDATE tbl_node SET prop = prop::jsonb - 'comments' WHERE id = {nodeId})
                     UPDATE tbl_node SET prop = prop::jsonb || (SELECT jsonb_build_object('comments', 
                     json_agg(list)::jsonb) FROM new_comment_list) WHERE id = {nodeId}"""
-
+    print(statement)
     db.execute(statement)
     return f" comment id = {commentId} deleted", 200
