@@ -191,6 +191,16 @@ def add_node_comment(node):
 
     db = Database()
     json_comment = json.dumps(comment).replace("\'", "''")
+
+    #check if node has comments.
+    check_statement = f"SELECT prop->>'comments' FROM tbl_node WHERE id = {node_id}"
+    check_result = db.execute(check_statement)
+    #creates comment key if it does not exist.
+    if len(check_result) < 1:
+        comment_list = {"comments": []}
+        create_comment_list = f"UPDATE tbl_node SET prop = prop::jsonb || '{comment_list}' WHERE id = {node_id}"
+        db.execute(create_comment_list)
+
     statement = "UPDATE tbl_node SET prop = jsonb_insert(prop, '{comments, 0}',"
     statement = statement + f"""'{json_comment}'::jsonb) WHERE id = {node_id}"""
     print(statement)
