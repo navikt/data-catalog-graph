@@ -596,7 +596,7 @@ paths:
       summary: Delete a comment
       description: Delete a comment
       parameters:
-        - name: commend_id
+        - name: comment_id
           in: query
           type: string
           description: target comment
