@@ -198,8 +198,7 @@ def add_node_comment(node):
     #creates comment key if it does not exist.
     if check_result is None:
         comment_list = '{"comments": []}'
-        print("if clause triggered")
-        create_comment_list = f"UPDATE tbl_node SET prop = prop::jsonb || '{comment_list}' WHERE id = {node_id}"
+        create_comment_list = f"UPDATE tbl_node SET prop = prop::jsonb || '{comment_list}'::jsonb WHERE id = {node_id}"
         db.execute(create_comment_list)
 
     statement = "UPDATE tbl_node SET prop = jsonb_insert(prop, '{comments, 0}',"
