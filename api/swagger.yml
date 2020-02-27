@@ -611,6 +611,50 @@ paths:
         202:
           description: Successfully deleted comment
 
+  /node/tag:
+    put:
+      operationId: node.add_node_tag
+      tags:
+        - Nodes
+      summary: Add a tag
+      description: Add a tag
+      parameters:
+        - name: node
+          in: body
+          description: tag payload
+          required: True
+          schema:
+            type: object
+            properties:
+              nodeId:
+                type: integer
+              tagBody:
+                type: object
+      responses:
+        202:
+          description: Successfully added a tag
+
+    delete:
+      operationId: node.delete_node_tag
+      tags:
+        - Nodes
+      summary: Delete a tag
+      description: Delete a tag
+      parameters:
+        - name: tagId
+          in: query
+          type: string
+          description: target tag
+          required: true
+        - name: nodeId
+          in: query
+          type: integer
+          description: target node
+          required: true
+      responses:
+        202:
+          description: Successfully deleted tag
+
   /node/{prop_id}:
     delete:
       operationId: node.delete
