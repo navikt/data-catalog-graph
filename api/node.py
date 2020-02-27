@@ -198,6 +198,8 @@ def add_node_comment(node):
     check_statement = f"SELECT prop->>'comments' AS comments FROM tbl_node WHERE id = {node_id}"
     check_result = db.execute(check_statement)
     logging.warning(check_result)
+    logging.warning(check_result[0]['comments'])
+    logging.warning(check_result[1]['comments'])
     #creates comment key if it does not exist.
     if check_result is None:
         logging.warning("if clause triggered")
