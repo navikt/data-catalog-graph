@@ -203,7 +203,7 @@ def add_node_comment(node):
         create_comment_list = f"UPDATE tbl_node SET prop = prop::jsonb || '{comment_list}'::jsonb WHERE id = {node_id};"
         statement = create_comment_list + statement
 
-    print(statement)
+    logging.warning(statement)
     response = db.execute(statement)
     return f" Successfully added {response} comment ", 200
 
