@@ -196,7 +196,7 @@ def add_node_comment(node):
 
     #check if node has comments.
     check_statement = f"SELECT prop->>'comments' AS comments FROM tbl_node WHERE id = {node_id}"
-    check_result = db.execute(check_statement)@
+    check_result = db.execute(check_statement)
     logging.warning(check_result)
     #creates comment key if it does not exist.
     if check_result is None:
