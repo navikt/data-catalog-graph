@@ -84,7 +84,7 @@ def get_nodes_by_list_of_ids(id_list):
             abort(400, f"Request body is missing ID key of type integer")
         statement = statement + f' {list_item},'
 
-    #DELETE the last "," in statement
+    # DELETE the last "," in statement
     statement = statement[:-1]
     statement = statement + ");"
     print(statement)
@@ -139,7 +139,7 @@ def upsert_node(node):
             statement = statement + f" '{prop_id}',"
             create_statement = create_statement + f"""(COALESCE((SELECT prop FROM previous_valid WHERE prop->>'id' = 
                                                 '{prop_id}')::jsonb, """ + "'{}'::jsonb) ||" \
-                                                + f" '{json_prop}'::jsonb, TRUE),"
+                               + f" '{json_prop}'::jsonb, TRUE),"
 
     # insert new
     db = Database()
@@ -175,16 +175,15 @@ def delete(prop_id):
 
 
 def add_node_comment(node):
-
     node_id = node.get("nodeId")
     if node_id is None:
-        abort(409,  "The node should contain a node Id property of type integer")
+        abort(409, "The node should contain a node Id property of type integer")
     comment = node.get("commentBody")
     if comment is None:
-        abort(409,  "The node should contain comment property of type dict")
+        abort(409, "The node should contain comment property of type dict")
     comment_id = comment.get("id")
     if comment_id is None:
-        abort(409,  "The comment dict should contain id property of type string")
+        abort(409, "The comment dict should contain id property of type string")
     comment_author = comment.get("author")
     if comment_author is None:
         abort(409, "The comment dict should contain author property of type string")
@@ -194,29 +193,25 @@ def add_node_comment(node):
     statement = "UPDATE tbl_node SET prop = jsonb_insert(prop, '{comments, 0}',"
     statement = statement + f"""'{json_comment}'::jsonb) WHERE id = {node_id}"""
 
-    #check if node has comments.
+    # check if node has comments.
     check_statement = f"SELECT prop->>'comments' AS comments FROM tbl_node WHERE id = {node_id}"
     check_result = db.execute(check_statement)
-    logging.warning(check_result)
-    logging.warning(check_result[0]['comments'])
-    logging.warning(check_result[1]['comments'])
-    #creates comment key if it does not exist.
-    if check_result is None:
-        logging.warning("if clause triggered")
+    # creates comment key if it does not exist.
+    if check_result[0]['comments'] is None:
         comment_list = '{"comments": []}'
         create_comment_list = f"UPDATE tbl_node SET prop = prop::jsonb || '{comment_list}'::jsonb WHERE id = {node_id};"
         statement = create_comment_list + statement
 
-    logging.warning(statement)
+    print(statement)
     response = db.execute(statement)
     return f" Successfully added {response} comment ", 200
 
 
 def delete_node_comment(commentId, nodeId):
     if commentId is None:
-        abort(409,  "The query should contain comment id property of type string")
+        abort(409, "The query should contain comment id property of type string")
     if nodeId is None:
-        abort(409,  "The query should contain a node id property of type integer")
+        abort(409, "The query should contain a node id property of type integer")
     print("delete comment:", commentId)
 
     db = Database()
