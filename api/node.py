@@ -223,3 +223,51 @@ def delete_node_comment(commentId, nodeId):
     print(statement)
     db.execute(statement)
     return f" comment id = {commentId} deleted", 200
+
+
+def add_node_tag(node):
+    node_id = node.get("nodeId")
+    if node_id is None:
+        abort(409, "The node should contain a node Id property of type integer")
+    tag = node.get("tagBody")
+    if tag is None:
+        abort(409, "The node should contain tag property of type dict")
+    tag_id = tag.get("id")
+    if tag_id is None:
+        abort(409, "The tag dict should contain id property of type string")
+
+    db = Database()
+    json_tag = json.dumps(tag).replace("\'", "''")
+    statement = "UPDATE tbl_node SET prop = jsonb_insert(prop, '{tags, 0}',"
+    statement = statement + f"""'{json_tag}'::jsonb) WHERE id = {node_id}"""
+
+    # check if node has tags.
+    check_statement = f"SELECT prop->>'tags' AS tags FROM tbl_node WHERE id = {node_id}"
+    check_result = db.execute(check_statement)
+    # creates tag key if it does not exist.
+    if check_result[0]['tags'] is None:
+        tag_list = '{"tags": []}'
+        create_tag_list = f"UPDATE tbl_node SET prop = prop::jsonb || '{tag_list}'::jsonb WHERE id = {node_id};"
+        statement = create_tag_list + statement
+
+    print(statement)
+    response = db.execute(statement)
+    return f" Successfully added {response} tag ", 200
+
+
+def delete_node_tag(tagId, nodeId):
+    if tagId is None:
+        abort(409, "The query should contain tag id property of type string")
+    if nodeId is None:
+        abort(409, "The query should contain a node id property of type integer")
+    print("delete tag:", tagId)
+
+    db = Database()
+    statement = f"""WITH new_tag_list AS (SELECT list FROM tbl_node n, jsonb_array_elements(prop->'tags') list
+                    WHERE n.id = {nodeId} AND list->>'id' NOT IN ('{tagId}')), 
+                    update_node AS (UPDATE tbl_node SET prop = prop::jsonb - 'tags' WHERE id = {nodeId})
+                    UPDATE tbl_node SET prop = prop::jsonb || (SELECT jsonb_build_object('tags', 
+                    json_agg(list)::jsonb) FROM new_tag_list) WHERE id = {nodeId}"""
+    print(statement)
+    db.execute(statement)
+    return f" tag id = {tagId} for node deleted", 200
