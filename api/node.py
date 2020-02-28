@@ -1,4 +1,3 @@
-import logging
 import json
 from flask import abort
 from database import Database
@@ -34,7 +33,7 @@ def get_by_id(id):
 def get_by_prop_id(id):
     db = Database()
     statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
-    print(statement)
+
     node = db.execute(statement)
     if node is not None:
         return node, 200
@@ -45,7 +44,7 @@ def get_by_prop_id(id):
 def get_valid_node_by_prop_id(id):
     db = Database()
     statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'id' = '{id}'"
-    print(statement)
+
     node = db.execute(statement)
     if node is not None:
         return node, 200
@@ -56,7 +55,7 @@ def get_valid_node_by_prop_id(id):
 def get_all_nodes_by_type(type):
     db = Database()
     statement = f"SELECT * FROM tbl_node WHERE prop->>'type' ILIKE '{type}' "
-    print(statement)
+
     node = db.execute(statement)
     if node is not None:
         return node, 200
@@ -67,7 +66,7 @@ def get_all_nodes_by_type(type):
 def get_all_valid_nodes_by_type(type):
     db = Database()
     statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE '{type}' "
-    print(statement)
+
     node = db.execute(statement)
     if node is not None:
         return node, 200
@@ -76,7 +75,6 @@ def get_all_valid_nodes_by_type(type):
 
 
 def get_nodes_by_list_of_ids(id_list):
-    logging.warning(id_list)
     db = Database()
     statement = "SELECT * FROM tbl_node WHERE id IN ("
     for list_item in id_list:
@@ -87,13 +85,12 @@ def get_nodes_by_list_of_ids(id_list):
     # DELETE the last "," in statement
     statement = statement[:-1]
     statement = statement + ");"
-    print(statement)
+
     nodes = db.execute(statement)
     return nodes, 200
 
 
 def create(node):
-    print(node)
     statement = "INSERT INTO tbl_node (prop, valid) VALUES"
     for node_item in node:
         prop = node_item.get("prop")
@@ -113,13 +110,13 @@ def create(node):
     db = Database()
     # Deleting the space and ',' at the end of the statement
     statement = statement[:-1]
-    print(statement)
+
     node = db.execute(statement)
     return f" Successfully created {node} rows", 200
 
 
 def upsert_node(node):
-    print("put:", node)
+
     statement = "WITH previous_valid AS (SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'id' IN ("
     update_statement = "update_previous_valid AS (UPDATE tbl_node SET valid_to = now(), valid = FALSE " \
                        "WHERE valid_to IS Null AND id IN (SELECT id from previous_valid))"
@@ -148,14 +145,13 @@ def upsert_node(node):
     statement = statement + ")),"
     create_statement = create_statement[:-1]
     statement = statement + update_statement + create_statement
-    print(statement)
+
     # Creating new nodes with valid states
     node = db.execute(statement)
     return f"Successfully updated {node} rows", 200
 
 
 def delete(prop_id):
-    print("delete:", prop_id)
 
     # Checking if node with prop_id exist
     db = Database()
@@ -202,7 +198,6 @@ def add_node_comment(node):
         create_comment_list = f"UPDATE tbl_node SET prop = prop::jsonb || '{comment_list}'::jsonb WHERE id = {node_id};"
         statement = create_comment_list + statement
 
-    print(statement)
     response = db.execute(statement)
     return f" Successfully added {response} comment ", 200
 
@@ -212,7 +207,6 @@ def delete_node_comment(commentId, nodeId):
         abort(409, "The query should contain comment id property of type string")
     if nodeId is None:
         abort(409, "The query should contain a node id property of type integer")
-    print("delete comment:", commentId)
 
     db = Database()
     statement = f"""WITH new_comment_list AS (SELECT list FROM tbl_node n, jsonb_array_elements(prop->'comments') list
@@ -220,7 +214,7 @@ def delete_node_comment(commentId, nodeId):
                     update_node AS (UPDATE tbl_node SET prop = prop::jsonb - 'comments' WHERE id = {nodeId})
                     UPDATE tbl_node SET prop = prop::jsonb || (SELECT jsonb_build_object('comments', 
                     json_agg(list)::jsonb) FROM new_comment_list) WHERE id = {nodeId}"""
-    print(statement)
+
     db.execute(statement)
     return f" comment id = {commentId} deleted", 200
 
@@ -250,7 +244,6 @@ def add_node_tag(node):
         create_tag_list = f"UPDATE tbl_node SET prop = prop::jsonb || '{tag_list}'::jsonb WHERE id = {node_id};"
         statement = create_tag_list + statement
 
-    print(statement)
     response = db.execute(statement)
     return f" Successfully added {response} tag ", 200
 
@@ -260,7 +253,6 @@ def delete_node_tag(tagId, nodeId):
         abort(409, "The query should contain tag id property of type string")
     if nodeId is None:
         abort(409, "The query should contain a node id property of type integer")
-    print("delete tag:", tagId)
 
     db = Database()
     statement = f"""WITH new_tag_list AS (SELECT list FROM tbl_node n, jsonb_array_elements(prop->'tags') list
@@ -268,6 +260,6 @@ def delete_node_tag(tagId, nodeId):
                     update_node AS (UPDATE tbl_node SET prop = prop::jsonb - 'tags' WHERE id = {nodeId})
                     UPDATE tbl_node SET prop = prop::jsonb || (SELECT jsonb_build_object('tags', 
                     json_agg(list)::jsonb) FROM new_tag_list) WHERE id = {nodeId}"""
-    print(statement)
+
     db.execute(statement)
     return f" tag id = {tagId} for node deleted", 200

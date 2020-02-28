@@ -8,7 +8,6 @@ def get_all():
     db = Database()
 
     statement = "SELECT * FROM tbl_edge"
-    print(statement)
     edges = db.execute(statement)
 
     if edges is not None:
@@ -18,7 +17,6 @@ def get_all():
 
 
 def update(edges):
-    print("put:", edges)
     statement = "WITH valid_nodes as (SELECT id, prop->>'id' as prop_id from tbl_node WHERE valid = TRUE ) " \
                 "INSERT INTO tbl_edge (n1, n2, prop) VALUES"
     for edge in edges:
@@ -48,7 +46,6 @@ def update(edges):
 
 
 def get_all_edges_of_node(node_id):
-    print("get:", node_id)
     db = Database()
     
     statement = f"SELECT * FROM tbl_edge WHERE n1 = {node_id} OR n2 = {node_id}"
@@ -61,7 +58,6 @@ def get_all_edges_of_node(node_id):
 
 
 def get_all_edges_of_source_node(node_id):
-    print("get:", node_id)
     db = Database()
 
     statement = f"""SELECT n.*, e.n1 source_node, e.n2 target_node, e.prop edge_prop, e.created edge_created 
@@ -76,7 +72,6 @@ def get_all_edges_of_source_node(node_id):
 
 
 def get_all_edges_of_target_node(node_id):
-    print("get:", node_id)
     db = Database()
 
     statement = f"SELECT * FROM tbl_edge WHERE n2={node_id}"

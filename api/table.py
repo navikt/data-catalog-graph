@@ -44,7 +44,7 @@ def get_valid_table_by_prop_id(prop_id):
     db = Database()
     statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'db_table' 
                     AND prop->>'id' = '{prop_id}'"""
-    print(statement)
+
     nodes = db.execute(statement)
 
     if len(nodes) >= 1:
@@ -57,7 +57,7 @@ def get_valid_column_by_prop_id(prop_id):
     db = Database()
     statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'db_table_column' 
                     AND prop->>'id' = '{prop_id}'"""
-    print(statement)
+
     nodes = db.execute(statement)
 
     if len(nodes) >= 1:
@@ -70,7 +70,7 @@ def search_valid_tables_by_schema(schema_name):
     db = Database()
     statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'db_table' 
                     AND prop->>'schema_name' ILIKE '{schema_name}'"""
-    print(statement)
+
     nodes = db.execute(statement)
 
     if len(nodes) >= 1:
@@ -83,7 +83,7 @@ def search_valid_columns_by_schema(schema_name):
     db = Database()
     statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'db_table_column' 
                     AND prop->>'schema_name' ILIKE '{schema_name}'"""
-    print(statement)
+
     nodes = db.execute(statement)
 
     if len(nodes) >= 1:
@@ -107,7 +107,7 @@ def update_table(table):
 
     json_prop = json.dumps(prop).replace("\'", "''")
     statement = f"""UPDATE tbl_node SET prop = '{json_prop}' WHERE prop->>'id' = '{prop_id}' AND valid = TRUE"""
-    print(statement)
+
     node = db.execute(statement)
     return f"Successfully updated {node} rows", 200
 
@@ -121,7 +121,7 @@ def get_columns_by_tag(tag_list):
 
     statement = statement[:-1]
     statement = statement + "])"
-    print(statement)
+
     nodes = db.execute(statement)
     if len(nodes) >= 1:
         return nodes, 200

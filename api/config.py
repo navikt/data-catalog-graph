@@ -4,7 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from dotenv import load_dotenv
 from flask_cors import CORS
+import logging
 from flask import Flask
+
 
 from pathlib import Path  # python3 only
 env_path = Path('..') / '.env'
@@ -23,6 +25,8 @@ app = connex_app.app
 CORS(app)
 
 # Configure the SqlAlchemy part of the app instance
+logger = logging.getLogger('werkzeug')
+logger.setLevel(logging.ERROR)
 app.config["SQLALCHEMY_ECHO"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URI") 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

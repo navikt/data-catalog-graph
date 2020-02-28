@@ -1,5 +1,4 @@
 from flask import redirect, render_template
-
 import config
 
 connex_app = config.connex_app
