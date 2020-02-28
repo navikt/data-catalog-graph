@@ -18,7 +18,7 @@ def get_all():
 def get_valid_node_by_prop_id(id):
     db = Database()
     statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'term' AND prop->>'id' = '{id}'"
-    print(statement)
+
     nodes = db.execute(statement)
     pattern = '\[([^|]+)\|([A-Z]{1,10}-\d+)\]'
     if nodes is not None:

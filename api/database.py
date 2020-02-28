@@ -43,7 +43,7 @@ class Database:
         try:
             self.open_connection()
             with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
-                if any(x in query for x in ['select','SELECT']):
+                if any(x in query for x in ['select', 'SELECT']):
                     cur.execute(query)
                     result = cur.fetchone()
                     return result
@@ -70,8 +70,10 @@ class Database:
                     cur.close()
                     return affected
         except psycopg2.DatabaseError as e:
-            logging.error(e)
-            abort(400, f"Error Message: {e}")
+            error = e.pgerror.split("\n")
+            error_message = error[0]
+            logging.error(error_message)
+            abort(400, f"Error Message: {error_message}")
         finally:
             if self.conn:
                 self.conn.close()

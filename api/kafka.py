@@ -46,7 +46,7 @@ def get_valid_kafka_topic_by_prop_id(prop_id):
     db = Database()
     statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'kafka_topic' 
                     AND prop->>'id' = '{prop_id}'"""
-    print(statement)
+
     nodes = db.execute(statement)
 
     if len(nodes) >= 1:
@@ -59,7 +59,7 @@ def get_valid_kafka_topic_field_by_prop_id(prop_id):
     db = Database()
     statement = f"""SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE 'kafka_topic_field' 
                     AND prop->>'id' = '{prop_id}'"""
-    print(statement)
+
     nodes = db.execute(statement)
 
     if len(nodes) >= 1:
