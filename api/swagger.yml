@@ -568,7 +568,7 @@ paths:
             $ref: '#/definitions/Node'
 
   /node/comment:
-    put:
+    post:
       operationId: node.add_node_comment
       tags:
         - Nodes
@@ -589,6 +589,28 @@ paths:
       responses:
         202:
           description: Successfully added a comment
+
+    put:
+      operationId: node.update_node_comment
+      tags:
+        - Nodes
+      summary: Update a comment
+      description: Update a comment
+      parameters:
+        - name: node
+          in: body
+          description: comment payload
+          required: True
+          schema:
+            type: object
+            properties:
+              nodeId:
+                type: integer
+              commentBody:
+                type: object
+      responses:
+        202:
+          description: Successfully updated a comment
 
     delete:
       operationId: node.delete_node_comment
