@@ -91,7 +91,8 @@ def get_nodes_by_list_of_ids(id_list):
 
 
 def create(node):
-    statement = "INSERT INTO tbl_node (prop, valid) VALUES"
+    statement = "INSERT INTO tbl_node_prop (prop, valid) VALUES"
+    create_node_statement = "INSERT INTO tbl_node (prop_id) VALUES"
     for node_item in node:
         prop = node_item.get("prop")
         if prop is None:
@@ -104,23 +105,26 @@ def create(node):
             abort(409, f"The prop dict should contain type property of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
+            create_node_statement = create_node_statement + f" '{prop_id}',"
             statement = statement + f" ('{json_prop}', TRUE),"
 
     # insert new
     db = Database()
     # Deleting the space and ',' at the end of the statement
-    statement = statement[:-1]
+    statement = statement[:-1] + ";"
+    create_node_statement = create_node_statement[:-1] + ")"
+    statement = statement + create_node_statement
 
     node = db.execute(statement)
     return f" Successfully created {node} rows", 200
 
 
 def upsert_node(node):
-
-    statement = "WITH previous_valid AS (SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'id' IN ("
-    update_statement = "update_previous_valid AS (UPDATE tbl_node SET valid_to = now(), valid = FALSE " \
+    statement = "WITH previous_valid AS (SELECT * FROM tbl_node_prop WHERE valid = TRUE AND prop->>'id' IN ("
+    update_statement = "update_previous_valid AS (UPDATE tbl_node_prop SET valid_to = now(), valid = FALSE " \
                        "WHERE valid_to IS Null AND id IN (SELECT id from previous_valid))"
-    create_statement = "INSERT INTO tbl_node (prop, valid) VALUES"
+    create_statement = "INSERT INTO tbl_node_prop (prop, valid) VALUES"
+    create_node_statement = "INSERT INTO tbl_node (prop_id) VALUES"
     for node_item in node:
         prop = node_item.get("prop")
         if prop is None:
@@ -134,6 +138,7 @@ def upsert_node(node):
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
             statement = statement + f" '{prop_id}',"
+            create_node_statement = create_node_statement + f" '{prop_id}',"
             create_statement = create_statement + f"""(COALESCE((SELECT prop FROM previous_valid WHERE prop->>'id' = 
                                                 '{prop_id}')::jsonb, """ + "'{}'::jsonb) ||" \
                                + f" '{json_prop}'::jsonb, TRUE),"
@@ -141,10 +146,11 @@ def upsert_node(node):
     # insert new
     db = Database()
     # Deleting the space and ',' at the end of each statement
-    statement = statement[:-1]
-    statement = statement + ")),"
+    statement = statement[:-1] + ")),"
     create_statement = create_statement[:-1]
-    statement = statement + update_statement + create_statement
+    statement = statement + update_statement + create_statement + ";"
+    create_node_statement = create_node_statement[:-1] + ") ON CONFLICT (prop_id) DO NOTHING;"
+    statement = statement + create_node_statement
 
     # Creating new nodes with valid states
     node = db.execute(statement)
@@ -152,7 +158,6 @@ def upsert_node(node):
 
 
 def delete(prop_id):
-
     # Checking if node with prop_id exist
     db = Database()
     check_statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{prop_id}'"
