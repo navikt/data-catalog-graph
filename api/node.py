@@ -248,6 +248,46 @@ def add_node_tag(node):
     return f" Successfully added {response} tag ", 200
 
 
+def update_node_comment(node):
+    node_id = node.get("nodeId")
+    if node_id is None:
+        abort(409, "The node should contain a node Id property of type integer")
+    comment = node.get("commentBody")
+    if comment is None:
+        abort(409, "The node should contain comment property of type dict")
+    comment_id = comment.get("id")
+    if comment_id is None:
+        abort(409, "The comment dict should contain id property of type string")
+    comment_author = comment.get("author")
+    if comment_author is None:
+        abort(409, "The comment dict should contain author property of type string")
+
+    db = Database()
+    delete_statement = f"""WITH new_comment_list AS (SELECT list FROM tbl_node n, jsonb_array_elements(prop->'comments') list
+                    WHERE n.id = {node_id} AND list->>'id' NOT IN ('{comment_id}')), 
+                    update_node AS (UPDATE tbl_node SET prop = prop::jsonb - 'comments' WHERE id = {node_id})
+                    UPDATE tbl_node SET prop = prop::jsonb || (SELECT jsonb_build_object('comments', 
+                    json_agg(list)::jsonb) FROM new_comment_list) WHERE id = {node_id};"""
+
+    json_comment = json.dumps(comment).replace("\'", "''")
+    update_statement = "UPDATE tbl_node SET prop = jsonb_insert(prop, '{comments, 0}',"
+    update_statement = update_statement + f"""'{json_comment}'::jsonb) WHERE id = {node_id}"""
+
+    # check if node has comments.
+    check_statement = f"SELECT prop->>'comments' AS comments FROM tbl_node WHERE id = {node_id}"
+    check_result = db.execute(check_statement)
+    # creates comment key if it does not exist.
+    if check_result[0]['comments'] is None:
+        comment_list = '{"comments": []}'
+        create_comment_list = f"UPDATE tbl_node SET prop = prop::jsonb || '{comment_list}'::jsonb WHERE id = {node_id};"
+        update_statement = create_comment_list + update_statement
+
+    statement = delete_statement + update_statement
+
+    response = db.execute(statement)
+    return f" Successfully updated {response} comment ", 200
+
+
 def delete_node_tag(tagId, nodeId):
     if tagId is None:
         abort(409, "The query should contain tag id property of type string")
