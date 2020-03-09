@@ -48,7 +48,7 @@ def get_by_prop_id(id):
 def get_valid_node_by_prop_id(id):
     db = Database()
     statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " +\
-                f"WHERE n.prop_id = p.prop->>'id' AND p.valid = TRUE AND n.id = '{id}'"
+                f"WHERE n.prop_id = p.prop->>'id' AND p.valid = TRUE AND n.prop_id = '{id}'"
 
     node = db.execute(statement)
     if node is not None:
