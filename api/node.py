@@ -105,14 +105,14 @@ def create(node):
             abort(409, f"The prop dict should contain type property of type string")
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
-            create_node_statement = create_node_statement + f" {prop_id},"
+            create_node_statement = create_node_statement + f" ('{prop_id}'),"
             statement = statement + f" ('{json_prop}', TRUE),"
 
     # insert new
     db = Database()
     # Deleting the space and ',' at the end of the statement
     statement = statement[:-1] + ";"
-    create_node_statement = create_node_statement[:-1] + ")"
+    create_node_statement = create_node_statement[:-1]
     statement = statement + create_node_statement
 
     node = db.execute(statement)
@@ -138,7 +138,7 @@ def upsert_node(node):
         else:
             json_prop = json.dumps(prop).replace("\'", "''")
             statement = statement + f" '{prop_id}',"
-            create_node_statement = create_node_statement + f" {prop_id},"
+            create_node_statement = create_node_statement + f" ('{prop_id}'),"
             create_statement = create_statement + f"""(COALESCE((SELECT prop FROM previous_valid WHERE prop->>'id' = 
                                                 '{prop_id}')::jsonb, """ + "'{}'::jsonb) ||" \
                                                 + f" '{json_prop}'::jsonb, TRUE),"
@@ -149,7 +149,7 @@ def upsert_node(node):
     statement = statement[:-1] + ")),"
     create_statement = create_statement[:-1]
     statement = statement + update_statement + create_statement + ";"
-    create_node_statement = create_node_statement[:-1] + ") ON CONFLICT (prop_id) DO NOTHING;"
+    create_node_statement = create_node_statement[:-1] + " ON CONFLICT (prop_id) DO NOTHING;"
     statement = statement + create_node_statement
 
     # Creating new nodes with valid states
