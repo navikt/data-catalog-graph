@@ -47,7 +47,7 @@ def get_by_prop_id(id):
 
 def get_valid_node_by_prop_id(id):
     db = Database()
-    statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " +\
+    statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " + \
                 f"WHERE n.prop_id = p.prop->>'id' AND p.valid = TRUE AND n.prop_id = '{id}'"
 
     node = db.execute(statement)
@@ -59,7 +59,7 @@ def get_valid_node_by_prop_id(id):
 
 def get_all_nodes_by_type(type):
     db = Database()
-    statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " +\
+    statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " + \
                 f"WHERE n.prop_id = p.prop->>'id' AND p.prop->>'type' ILIKE '%{type}%'"
 
     node = db.execute(statement)
@@ -71,7 +71,7 @@ def get_all_nodes_by_type(type):
 
 def get_all_valid_nodes_by_type(type):
     db = Database()
-    statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " +\
+    statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " + \
                 f"WHERE n.prop_id = p.prop->>'id' AND p.valid = TRUE AND p.prop->>'type' ILIKE '%{type}%'"
 
     node = db.execute(statement)
@@ -149,7 +149,7 @@ def upsert_node(node):
             create_node_statement = create_node_statement + f" ('{prop_id}'),"
             create_statement = create_statement + f"""(COALESCE((SELECT prop FROM previous_valid WHERE prop->>'id' = 
                                                 '{prop_id}')::jsonb, """ + "'{}'::jsonb) ||" \
-                                                + f" '{json_prop}'::jsonb, TRUE),"
+                               + f" '{json_prop}'::jsonb, TRUE),"
 
     # insert new
     db = Database()
@@ -169,17 +169,18 @@ def upsert_node(node):
 def delete(prop_id):
     # Checking if node with prop_id exist
     db = Database()
-    check_statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{prop_id}'"
+    check_statement = f"SELECT * FROM tbl_node WHERE prop_id = '{prop_id}'"
     node = db.execute(check_statement)
     if node is None:
         abort(404, f"Could not find node with prop->>'id' = '{prop_id}'")
     else:
+        node = node[0]
         node_id = node.get('id')
         # Deleting all edges before deleting node
-        delete_edges = f"DELETE FROM tbl_edge where n1 = {node_id} or n2 = {node_id}"
-        db.execute(delete_edges)
+        delete_edges = f"DELETE FROM tbl_edge where n1 = {node_id} or n2 = {node_id};"
         # Deleting node after all references to it is deleted
-        statement = f"DELETE FROM tbl_node WHERE prop->>'id' = '{prop_id}'"
+        statement = delete_edges + f"DELETE FROM tbl_node WHERE prop_id = '{prop_id}';" \
+                                 + f"DELETE FROM tbl_node_prop WHERE prop->>'id' = '{prop_id}' "
         db.execute(statement)
         return f"Node with prop id = {prop_id} deleted", 200
 
