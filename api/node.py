@@ -141,7 +141,7 @@ def upsert_node(node):
             create_node_statement = create_node_statement + f" ('{prop_id}'),"
             create_statement = create_statement + f"""(COALESCE((SELECT prop FROM previous_valid WHERE prop->>'id' = 
                                                 '{prop_id}')::jsonb, """ + "'{}'::jsonb) ||" \
-                                                 + f" '{json_prop}'::jsonb, TRUE),"
+                                                + f" '{json_prop}'::jsonb, TRUE),"
 
     # insert new
     db = Database()
@@ -149,7 +149,8 @@ def upsert_node(node):
     statement = statement[:-1] + ")),"
     create_statement = create_statement[:-1]
     statement = statement + update_statement + create_statement + ";"
-    create_node_statement = create_node_statement[:-1] + " ON CONFLICT (prop_id) DO NOTHING;"
+    create_node_statement = create_node_statement[:-1] \
+                            + " ON CONFLICT (prop_id) DO UPDATE SET prop_id = excluded.prop_id;"
     statement = statement + create_node_statement
 
     # Creating new nodes with valid states
