@@ -5,7 +5,8 @@ from database import Database
 
 def get_all():
     db = Database()
-    nodes = db.execute(f"SELECT * FROM tbl_node")
+    nodes = db.execute("SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid " +
+                       "FROM tbl_node n , tbl_node_prop p WHERE n.prop_id = p.prop->>'id'")
     if nodes is not None:
         return nodes
 
@@ -14,7 +15,8 @@ def get_all():
 
 def get_all_valid():
     db = Database()
-    nodes = db.execute(f"SELECT * FROM tbl_node where valid = TRUE")
+    nodes = db.execute("SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid " +
+                       "FROM tbl_node n , tbl_node_prop p WHERE n.prop_id = p.prop->>'id' AND p.valid = TRUE")
     if nodes is not None:
         return nodes
 
