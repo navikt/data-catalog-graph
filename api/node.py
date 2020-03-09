@@ -25,7 +25,8 @@ def get_all_valid():
 
 def get_by_id(id):
     db = Database()
-    node = db.execute(f"SELECT * FROM tbl_node WHERE id = '{id}'")
+    node = db.execute("SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " +
+                      f"WHERE n.prop_id = p.prop->>'id' AND n.id = '{id}'")
     if node is not None:
         return node, 200
 
@@ -34,7 +35,8 @@ def get_by_id(id):
 
 def get_by_prop_id(id):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE prop->>'id' = '{id}'"
+    statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " + \
+                f"WHERE n.prop_id = p.prop->>'id' AND n.prop_id = '{id}'"
 
     node = db.execute(statement)
     if node is not None:
@@ -45,7 +47,8 @@ def get_by_prop_id(id):
 
 def get_valid_node_by_prop_id(id):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'id' = '{id}'"
+    statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " +\
+                f"WHERE n.prop_id = p.prop->>'id' AND p.valid = TRUE AND n.id = '{id}'"
 
     node = db.execute(statement)
     if node is not None:
@@ -56,7 +59,8 @@ def get_valid_node_by_prop_id(id):
 
 def get_all_nodes_by_type(type):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE prop->>'type' ILIKE '{type}' "
+    statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " +\
+                f"WHERE n.prop_id = p.prop->>'id' AND p.prop->>'type' ILIKE '%{type}%'"
 
     node = db.execute(statement)
     if node is not None:
@@ -67,7 +71,8 @@ def get_all_nodes_by_type(type):
 
 def get_all_valid_nodes_by_type(type):
     db = Database()
-    statement = f"SELECT * FROM tbl_node WHERE valid = TRUE AND prop->>'type' ILIKE '{type}' "
+    statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " +\
+                f"WHERE n.prop_id = p.prop->>'id' AND p.valid = TRUE AND p.prop->>'type' ILIKE '%{type}%'"
 
     node = db.execute(statement)
     if node is not None:
@@ -78,7 +83,8 @@ def get_all_valid_nodes_by_type(type):
 
 def get_nodes_by_list_of_ids(id_list):
     db = Database()
-    statement = "SELECT * FROM tbl_node WHERE id IN ("
+    statement = "SELECT n.id, p.prop, p.valid_from, p.valid_to, p.valid FROM tbl_node n , tbl_node_prop p " \
+                + f"WHERE n.prop_id = p.prop->>'id' AND n.id IN ("
     for list_item in id_list:
         if list_item is None:
             abort(400, f"Request body is missing ID key of type integer")
