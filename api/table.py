@@ -23,7 +23,7 @@ def get_all_valid_table_columns(prop_id):
                     WHERE n.id = e.n2 AND p.valid = TRUE AND n.prop_id = p.prop->>'id' 
                     AND n.id IN (SELECT n2 FROM tbl_edge WHERE  n1 = 
                     (SELECT id FROM tbl_node WHERE prop_id = '{prop_id}')) 
-                    ORDER BY n.prop->>'column_name' ;"""
+                    ORDER BY p.prop->>'column_name' ;"""
     nodes = db.execute(statement)
 
     if len(nodes) >= 1:
